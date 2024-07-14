@@ -6,7 +6,8 @@ import Task from '../models/Task';
 const processTasks = async () => {
   try {
     await dbConnect(); // Connect to MongoDB
-    console.log("conneceted successfully")
+    console.log("Connected successfully");
+
     const tasks = await Task.find(); // Fetch all tasks from MongoDB
     const now = new Date();
 
@@ -19,7 +20,7 @@ const processTasks = async () => {
         // Implement notification logic here, such as sending notifications
         // You can use a notification service or any other logic required
       }
-      else if(timeDiff<=0){
+      else if (timeDiff <= 0) {
         console.log(`Task "${task.task}" Deadline reached!`)
       }
     });
