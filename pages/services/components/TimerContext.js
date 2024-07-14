@@ -1,3 +1,5 @@
+// pages/services/components/TimerContext.js
+
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
 // Create a context for the timer
@@ -5,12 +7,10 @@ const TimerContext = createContext();
 
 // Timer Provider component
 export const TimerProvider = ({ children }) => {
-  // State variables for timer
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(25);
   const [isActive, setIsActive] = useState(false);
 
-  // Effect hook for timer logic
   useEffect(() => {
     let interval = null;
 
@@ -19,7 +19,7 @@ export const TimerProvider = ({ children }) => {
         if (seconds === 0) {
           if (minutes === 0) {
             clearInterval(interval);
-            sendNotification(); // Notify when timer ends
+            sendNotification();
           } else {
             setMinutes(minutes - 1);
             setSeconds(59);
@@ -32,14 +32,12 @@ export const TimerProvider = ({ children }) => {
       clearInterval(interval);
     }
 
-    // Cleanup function to clear interval
     return () => clearInterval(interval);
   }, [isActive, seconds, minutes]);
 
-  // Functions for timer control
   const startTimer = () => {
     setIsActive(true);
-    requestNotificationPermission(); // Request permission when timer starts
+    requestNotificationPermission();
   };
 
   const stopTimer = () => setIsActive(false);
@@ -50,19 +48,16 @@ export const TimerProvider = ({ children }) => {
     setSeconds(0);
   };
 
-  // Function to request notification permission
   const requestNotificationPermission = () => {
     if (Notification.permission !== 'granted') {
       Notification.requestPermission().then(permission => {
         if (permission === 'denied') {
           console.log('User denied notification permission');
-          // Handle denial case
         }
       });
     }
   };
 
-  // Function to send notification
   const sendNotification = () => {
     if (Notification.permission === 'granted') {
       new Notification('Pomodoro Timer', {
@@ -70,11 +65,9 @@ export const TimerProvider = ({ children }) => {
       });
     } else {
       console.log('Notification permission not granted');
-      // Handle lack of permission
     }
   };
 
-  // Provide timer state and functions via context
   return (
     <TimerContext.Provider value={{ minutes, seconds, isActive, startTimer, stopTimer, resetTimer }}>
       {children}
@@ -82,5 +75,4 @@ export const TimerProvider = ({ children }) => {
   );
 };
 
-// Hook to use the timer context
 export const useTimer = () => useContext(TimerContext);
