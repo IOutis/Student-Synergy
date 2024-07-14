@@ -3,27 +3,6 @@ import NavComp from '../components/NavComp';
 import { useSession } from "next-auth/react";
 import Link from 'next/link';
 
-
-const fetchTasks = () => {
-  if (session) {
-    const query = new URLSearchParams(filters);
-    query.append('user', session.user.name);
-
-    fetch(`/api/tasks?${query.toString()}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch tasks');
-        }
-        return res.json();
-      })
-      .then((data) => setTasks(data))
-      .catch(error => {
-        console.error('Error fetching tasks:', error);
-        // Handle error state or display a message to the user
-      });
-  }
-};
-
 export default function TaskSchedule() {
   const { data: session } = useSession();
   const [tasks, setTasks] = useState([]);
@@ -33,10 +12,24 @@ export default function TaskSchedule() {
     recurring: ''
   });
 
-  
-
   useEffect(() => {
-    fetchTasks();
+    if (session) {
+      const query = new URLSearchParams(filters);
+      query.append('user', session.user.name);
+
+      fetch(`/api/tasks?${query.toString()}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed to fetch tasks');
+          }
+          return res.json();
+        })
+        .then((data) => setTasks(data))
+        .catch(error => {
+          console.error('Error fetching tasks:', error);
+          // Handle error state or display a message to the user
+        });
+    }
   }, [session, filters]);
 
   if (!session) {
@@ -126,9 +119,7 @@ export default function TaskSchedule() {
         <p>No tasks found. Add a new task below.</p>
       )}
 
-      <Link href="/services/add-task">
-        <a>Add Task</a>
-      </Link>
+<Link href="/services/add-task">Add Task</Link>
     </div>
   );
 }
