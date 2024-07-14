@@ -1,10 +1,10 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import NavComp from '../components/NavComp';
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
+import Link from 'next/link';
 
 export default function TaskSchedule() {
-  const { data: session } = useSession()
+  const { data: session } = useSession();
   const [tasks, setTasks] = useState([]);
   const [filters, setFilters] = useState({
     status: '',
@@ -18,8 +18,17 @@ export default function TaskSchedule() {
       query.append('user', session.user.name);
 
       fetch(`/api/tasks?${query.toString()}`)
-        .then((res) => res.json())
-        .then((data) => setTasks(data));
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed to fetch tasks');
+          }
+          return res.json();
+        })
+        .then((data) => setTasks(data))
+        .catch(error => {
+          console.error('Error fetching tasks:', error);
+          // Handle error state or display a message to the user
+        });
     }
   };
 
@@ -46,15 +55,18 @@ export default function TaskSchedule() {
       <div>
         <label>
           Status:
-          <select name="status"
+          <select
+            name="status"
             value={filters.status}
             onChange={handleFilterChange}
-            style={{ color: "black" }} >
-              <option value="Planned">Planned</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
-              <option value="Not Completed">Not Completed</option>
-            </select>
+            style={{ color: "black" }}
+          >
+            <option value="">All</option>
+            <option value="Planned">Planned</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Not Completed">Not Completed</option>
+          </select>
         </label>
         <label>
           Date:
@@ -85,7 +97,6 @@ export default function TaskSchedule() {
       </div>
 
       {tasks.length > 0 ? (
-       
         <table>
           <thead>
             <tr>
@@ -111,8 +122,10 @@ export default function TaskSchedule() {
       ) : (
         <p>No tasks found. Add a new task below.</p>
       )}
-      
-      <button onClick={() => window.location.href = '/services/add-task'}>Add Task</button>
+
+      <Link href="/services/add-task">
+        <a>Add Task</a>
+      </Link>
     </div>
   );
 }
