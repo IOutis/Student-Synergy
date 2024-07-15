@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import NavComp from '../components/NavComp';
+import NavComp from '../../components/NavComp';
 import { useSession } from "next-auth/react";
 import Link from 'next/link';
 

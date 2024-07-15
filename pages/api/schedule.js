@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import dbConnect from '../lib/dbconnect';
-import Task from '../models/Task';
+import Task from '../../models/Task';
 
 // Function to fetch tasks and process notifications
 const processTasks = async () => {

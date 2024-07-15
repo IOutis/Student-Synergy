@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import NavComp from './components/NavComp';
+import NavComp from '../components/NavComp';
 import UserLogin from './user_login'
 
 
