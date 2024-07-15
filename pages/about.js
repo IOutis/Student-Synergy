@@ -1,5 +1,5 @@
 import React from 'react'
-import NavComp from './components/NavComp';
+import NavComp from '../components/NavComp';
 
 export default function about() {
   return (
