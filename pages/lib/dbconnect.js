@@ -16,21 +16,31 @@ if (!cached) {
 }
 
 async function dbConnect() {
-  if (cached.conn) {
+  if (typeof window === 'undefined') {
+    // Server-side rendering
+    if (cached.conn) {
+      return cached.conn;
+    }
+
+    if (!cached.promise) {
+      const opts = {
+        bufferCommands: false,
+      };
+
+      cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+        return mongoose;
+      });
+    }
+    cached.conn = await cached.promise;
     return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const opts = {
+  } else {
+    // Client-side rendering
+    const mongoose = await import('mongoose');
+    const conn = await mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
     });
+    return conn;
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
 }
 
 export default dbConnect;
