@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 export default function AddTask() {
@@ -14,29 +14,41 @@ export default function AddTask() {
         e.preventDefault();
         const now = new Date();
 
-    // Append the current date to the time input to create a full datetime string
-    const dateTimeString = `${now.toISOString().split('T')[0]}T${time}`;
+        // Append the current date to the time input to create a full datetime string
+        const dateTimeString = `${now.toISOString().split('T')[0]}T${time}`;
 
-    const res = await fetch('/api/task', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            user: session.user.name,
-            task,
-            time: dateTimeString, // Use the modified time here
-            date,
-            status,
-            description,
-            recurring,
-        }),
-    });
+        try {
+            const res = await fetch('/api/task', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user: session.user.name,
+                    task,
+                    time: dateTimeString,
+                    date,
+                    status,
+                    description,
+                    recurring,
+                }),
+            });
 
-        if (res.ok) {
-            window.location.href = '/services/task-schedule';
+            if (res.ok) {
+                window.location.href = '/services/task-schedule';
+            } else {
+                console.error('Failed to add task:', res.statusText);
+                // Handle error state or display a message to the user
+            }
+        } catch (error) {
+            console.error('Error adding task:', error);
+            // Handle error state or display a message to the user
         }
     };
+
+    if (!session) {
+        return <p>Please sign in to add a task.</p>;
+    }
 
     return (
         <div>
@@ -49,7 +61,7 @@ export default function AddTask() {
                         value={task}
                         onChange={(e) => setTask(e.target.value)}
                         required
-                        style={{color:"black",}}
+                        style={{ color: 'black' }}
                     />
                 </label>
                 <label>
@@ -59,7 +71,7 @@ export default function AddTask() {
                         value={time}
                         onChange={(e) => setTime(e.target.value)}
                         required
-                        style={{color:"black",}}
+                        style={{ color: 'black' }}
                     />
                 </label>
                 <label>
@@ -69,12 +81,16 @@ export default function AddTask() {
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                         required
-                        style={{color:"black",}}
+                        style={{ color: 'black' }}
                     />
                 </label>
                 <label>
                     Status:
-                    <select value={status} onChange={(e)=>setStatus(e.target.value)} style={{color:"black"}}>
+                    <select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        style={{ color: 'black' }}
+                    >
                         <option value="Planned">Planned</option>
                         <option value="In Progress">In Progress</option>
                         <option value="Completed">Completed</option>
@@ -86,12 +102,16 @@ export default function AddTask() {
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        style={{color:"black",}}
+                        style={{ color: 'black' }}
                     />
                 </label>
                 <label>
                     Recurring:
-                    <select value={recurring} onChange={(e) => setRecurring(e.target.value)} style={{color:"black",}}>
+                    <select
+                        value={recurring}
+                        onChange={(e) => setRecurring(e.target.value)}
+                        style={{ color: 'black' }}
+                    >
                         <option value="none">None</option>
                         <option value="one week">One Week</option>
                         <option value="one month">One Month</option>

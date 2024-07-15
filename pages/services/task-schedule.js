@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Link from 'next/link';
 
 export default function TaskSchedule() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [tasks, setTasks] = useState([]);
   const [filters, setFilters] = useState({
     status: '',
@@ -31,6 +31,10 @@ export default function TaskSchedule() {
         });
     }
   }, [session, filters]);
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
 
   if (!session) {
     return <p>Please sign in to view your tasks.</p>;
@@ -119,7 +123,7 @@ export default function TaskSchedule() {
         <p>No tasks found. Add a new task below.</p>
       )}
 
-<Link href="/services/add-task">Add Task</Link>
+      <Link href="/services/add-task">Add Task</Link>
     </div>
   );
 }
