@@ -114,9 +114,15 @@ cron.schedule('* * * * *', () => {
   console.log('Running task processing every minute');
   processTasks();
 });
-
+const temp_ws = new WebSocket("ws://localhost:8080")
 export default async function handler(req, res) {
   try {
+    temp_ws.on("open",()=>{
+      temp_ws.send(JSON.stringify("CONNECTED TO THE SERVERRRRR!!!"));
+    })
+    temp_ws.on("close",()=>{
+      console.log("CLOSED");
+    })
     await processTasks();
     res.status(200).json({ message: 'Scheduler is running' });
   } catch (error) {
