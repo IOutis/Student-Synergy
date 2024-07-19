@@ -116,5 +116,6 @@ cron.schedule('* * * * *', () => {
 });
 
 export default function handler(req, res) {
+  processTasks();
   res.status(200).json({ message: 'Scheduler is running' });
 };
