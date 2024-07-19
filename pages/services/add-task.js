@@ -12,10 +12,9 @@ export default function AddTask() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const now = new Date();
 
-        // Append the current date to the time input to create a full datetime string
-        const dateTimeString = `${now.toISOString().split('T')[0]}T${time}`;
+        // Combine the date and time inputs into a single deadline string
+        const deadline = new Date(`${date}T${time}`);
 
         try {
             const res = await fetch('/api/task', {
@@ -26,8 +25,7 @@ export default function AddTask() {
                 body: JSON.stringify({
                     user: session.user.name,
                     task,
-                    time: dateTimeString,
-                    date,
+                    deadline,
                     status,
                     description,
                     recurring,
