@@ -115,7 +115,12 @@ cron.schedule('* * * * *', () => {
   processTasks();
 });
 
-export default function handler(req, res) {
-  processTasks();
-  res.status(200).json({ message: 'Scheduler is running' });
-};
+export default async function handler(req, res) {
+  try {
+    await processTasks();
+    res.status(200).json({ message: 'Scheduler is running' });
+  } catch (error) {
+    console.error('Error processing tasks:', error);
+    res.status(500).json({ message: 'Error processing tasks', error: error.message });
+  }
+}
