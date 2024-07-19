@@ -82,6 +82,7 @@ const processTasks = async () => {
 
           ws.on('open', () => {
             console.log(`Connected to WebSocket server for user: ${task.user}`);
+            ws.send(`Connected to the websocket server user : ${task.user}`);
             userConnections.set(task.user, ws);
             // Send the notification to the user
             ws.send(JSON.stringify(notification));
