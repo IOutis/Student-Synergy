@@ -36,7 +36,7 @@ export default function Note() {
     return (
         <div>
             <h2>{note.title}</h2>
-            {note.image && <img src={note.image} alt="Note Image" />}
+        
             <p>{note.content}</p>
             <div style={{width:"60vw", height:"100vh"}}>
             <DisplayEditor note={note.content} /></div>

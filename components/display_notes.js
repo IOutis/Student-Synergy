@@ -4,7 +4,7 @@ import { ClassicEditor, Bold, Essentials, Italic, Mention, Paragraph, Undo, Stri
 import 'ckeditor5/ckeditor5.css';
 import { useSession } from 'next-auth/react';
 
-function displayEditor({note}) {
+function DisplayEditor({note}) {
     const [editorData, setEditorData] = useState(note);
     const editorRef = useRef(null);
     const { data: session } = useSession();
@@ -114,4 +114,4 @@ function displayEditor({note}) {
     );
 }
 
-export default displayEditor;
+export default DisplayEditor;
