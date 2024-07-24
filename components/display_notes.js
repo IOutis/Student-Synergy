@@ -3,9 +3,12 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { ClassicEditor, Bold, Essentials, Italic, Mention, Paragraph, Undo, Strikethrough, Code, ImageUpload, Image, Link, Heading, FontFamily, Subscript, Superscript, BlockQuote, CodeBlock, Table, TableCaption, Text, Underline, Alignment, FontColor, Highlight, FontSize, Font, OrderedList, BulletedList, Indent, Outdent, List, TodoList, AutoImage, Autosave, ListView, SimpleUploadAdapter, ImageResize ,ImageStyle, ImageToolbar,} from 'ckeditor5';
 import 'ckeditor5/ckeditor5.css';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+
 
 function DisplayEditor({note}) {
-    const [editorData, setEditorData] = useState(note);
+    const router = useRouter();
+    const [editorData, setEditorData] = useState(note.content);
     const editorRef = useRef(null);
     const { data: session } = useSession();
 
@@ -18,13 +21,12 @@ function DisplayEditor({note}) {
             }, 1000);
         });
     }
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(session.user.name)
         if (editorRef.current) {
             const content = editorRef.current.getData();
-            console.log(content);
     
             // Prepare the form data to include both the content and the user's name
             const formData = new FormData();
@@ -33,15 +35,21 @@ function DisplayEditor({note}) {
             
     
             // Send the form data to the server
-            const res = await fetch('/api/editor', {
+            const res = await fetch(`/api/update_editor?id=${note._id}`, {
                 method: 'POST',
                 body: formData, // Note: Do not manually set Content-Type to application/json when sending FormData
             });
     
             const result = await res.json();
-            console.log(result);
+            if (!res.ok){
+                alert("Updating process failed");
+            }
+            else{
+                router.push('/services/notes');
+            }
+        
     
-            window.location.reload(); // Reload the page after successful submission
+            // window.location.reload(); // Reload the page after successful submission
         }
     };
 
@@ -91,7 +99,7 @@ function DisplayEditor({note}) {
                         },
                         simpleUpload: {
                             // The URL that the images are uploaded to.
-                            uploadUrl: 'http://localhost:3000/api/editor',
+                            uploadUrl: 'http://localhost:3000/api/upload',
                 
                             // Enable the XMLHttpRequest.withCredentials property.
                             withCredentials: true,
@@ -108,7 +116,7 @@ function DisplayEditor({note}) {
                         
                     }}
                 />
-                <button type="submit" style={{ color: "white" }}>Save</button>
+                <button type="submit" style={{ color: "white" }}>Update</button>
             </form>
         </div>
     );

@@ -36,6 +36,8 @@ export default function AddTask() {
                 window.location.href = '/services/task-schedule';
             } else {
                 console.error('Failed to add task:', res.statusText);
+                alert("Make sure the details are correct");
+                
                 // Handle error state or display a message to the user
             }
         } catch (error) {

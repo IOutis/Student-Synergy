@@ -15,20 +15,26 @@ router.post(async (req, res) => {
   await dbConnect();
 
   try {
-    const { content, user, title } = req.body;
-    console.log(title);
-    if (!content || !user || !title) {
+    const {id} = req.query;
+    const { content, user} = req.body;
+    console.log(content);
+    if (!content || !user) {
       throw new Error("Content and user fields are required");
     }
 
-    const newEditorData = new EditorData({
-      user,
-      content,
-      title,
-    });
+    const updatedData = await EditorData.findByIdAndUpdate(
+        id,
+        { user, content },
+        { new: true }
+    );
 
-    const savedData = await newEditorData.save();
-    res.status(201).json(savedData);
+    if (!updatedData) {
+        return res.status(404).json({ message: 'Data not found' });
+    }
+
+    // Send a success response
+    res.status(200).json(updatedData);
+
   } catch (error) {
     console.error("Error saving data:", error.message);
     res.status(500).json({ message: error.message });

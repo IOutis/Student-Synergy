@@ -32,24 +32,27 @@ export default function NotesHistory() {
         return <div><p onClick={() => signIn("google")} style={{ cursor: "pointer" }}>Sign in</p></div>;
     }
     const  handleSubmit = async (id) =>{
-        // console.log("Id: ",id);
-        // await fetch(`/api/get_note?id=${id}`)
-        // .then((data) => console.log(data))
-        // .catch(error => {
-        //     console.error('Error fetching tasks:', error);
-        //     // Handle error state or display a message to the user
-        //   });
           router.push(`/services/note?id=${id}`);
     }
 
     return (
         <div>
-    <h3>Notes History</h3>
+    <h3 style={{color:"white"}}>Notes History</h3>
+    {notes.length ? (
     <ul style={{ color: "white", paddingBottom: "6px" }}>
         {notes.map(note => (
-            <li style={{ marginBottom: '10px', cursor:"progress" }} key={note._id} onClick={() => handleSubmit(note._id)}>{note.content}</li>
+            <li
+                style={{ marginBottom: '10px', cursor: "pointer" }} // Changed cursor to pointer
+                key={note._id}
+                onClick={() => handleSubmit(note._id)}
+            >
+                {note.title}
+            </li>
         ))}
     </ul>
+) : (
+    <p style={{color:"white"}}>No Notes saved</p>
+)}
 </div>
 
     );

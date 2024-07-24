@@ -24,61 +24,61 @@ export default function NavComp() {
   const [notifications, setNotifications] = useState([]);
 
   // Load notifications from local storage when the component mounts
-  useEffect(() => {
-    const savedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
-    setNotifications(savedNotifications);
-  }, []);
+  // useEffect(() => {
+  //   const savedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
+  //   setNotifications(savedNotifications);
+  // }, []);
 
-  useEffect(() => {
-    if (session) {
-      const ws = new WebSocket(`ws://localhost:8080?user=${encodeURIComponent(session.user.name)}`);
+  // useEffect(() => {
+  //   if (session) {
+  //     const ws = new WebSocket(`ws://localhost:8080?user=${encodeURIComponent(session.user.name)}`);
   
-      ws.onopen = () => {
-        console.log("Connected to the WebSocket server");
-      };
+  //     ws.onopen = () => {
+  //       console.log("Connected to the WebSocket server");
+  //     };
   
-       ws.onmessage = async (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          console.log("Message from server:", message);
-          setNotifications((prev) => {
-            const updatedNotifications = [...prev, message];
-            console.log("Setting the notifications function: ", prev)
-            // Save notifications to local storage
-            localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
-            return updatedNotifications;
-          });
-        } catch (error) {
-          console.error("Error parsing message:", error);
-        }
-      };
-      if(ws.readyState===1){
-      ws.onclose = () => {
-        console.log("Disconnected from the WebSocket server");
-      };
-    }
+  //      ws.onmessage = async (event) => {
+  //       try {
+  //         const message = JSON.parse(event.data);
+  //         console.log("Message from server:", message);
+  //         setNotifications((prev) => {
+  //           const updatedNotifications = [...prev, message];
+  //           console.log("Setting the notifications function: ", prev)
+  //           // Save notifications to local storage
+  //           localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
+  //           return updatedNotifications;
+  //         });
+  //       } catch (error) {
+  //         console.error("Error parsing message:", error);
+  //       }
+  //     };
+  //     if(ws.readyState===1){
+  //     ws.onclose = () => {
+  //       console.log("Disconnected from the WebSocket server");
+  //     };
+  //   }
   
-      ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-      };
+  //     ws.onerror = (error) => {
+  //       console.error("WebSocket error:", error);
+  //     };
   
-      return () => {
-        ws.close();
-      };
-    }
-  }, [session]);
+  //     return () => {
+  //       ws.close();
+  //     };
+  //   }
+  // }, [session]);
 
-  useEffect(() => {
-    console.log("Notifications:", notifications);
+  // useEffect(() => {
+  //   console.log("Notifications:", notifications);
 
-  }, [notifications]);
-  function handleNotification(index){
-    const updatedNotifications = [...notifications];
-    updatedNotifications.splice(index, 1);
-    setNotifications(updatedNotifications);
-    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
-    console.log("index: ", index)
-  }  
+  // }, [notifications]);
+  // function handleNotification(index){
+  //   const updatedNotifications = [...notifications];
+  //   updatedNotifications.splice(index, 1);
+  //   setNotifications(updatedNotifications);
+  //   localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
+  //   console.log("index: ", index)
+  // }  
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -105,7 +105,7 @@ export default function NavComp() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <p className="font-bold text-white">Student Synergy</p>
+                  <p className="font-bold text-white sm:none md:block">Student Synergy</p>
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
@@ -161,7 +161,7 @@ export default function NavComp() {
                     </Menu>
                     {session && (
                       <div className="hidden sm:ml-6 sm:block">
-                        <div className="flex space-x-4">
+                        <div className="flex space-x-4 text-white">
                           <button onClick={() => signOut()}>Sign out</button>
                           <p>{session.user.name}</p>
                         </div>

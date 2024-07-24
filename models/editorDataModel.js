@@ -7,6 +7,10 @@ const EditorDataSchema = new Schema({
     type: String,
     required: true,
   },
+  title: {
+    type: String,
+    required: true,
+    },
   user: {
     type: String,
     required: [true, 'User required'],

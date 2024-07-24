@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 
 function CustomEditor() {
     const [editorData, setEditorData] = useState('');
+    const [title, setTitle] = useState('');
     const editorRef = useRef(null);
     const { data: session } = useSession();
 
@@ -21,14 +22,13 @@ function CustomEditor() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(session.user.name)
         if (editorRef.current) {
             const content = editorRef.current.getData();
-            console.log(content);
     
             // Prepare the form data
             const formData = new FormData();
             formData.append('content', content);
+            formData.append('title', title);
             formData.append('user', session.user.name); 
             
             try {
@@ -38,15 +38,15 @@ function CustomEditor() {
                 });
     
                 if (!res.ok) {
-                    throw new Error(`Server error: ${res.statusText}`);
+                    alert(`Server error: ${res.statusText}. Make sure you are NOT saving empty content`);
                 }
     
                 const result = await res.json();
-                console.log(result);
+                // console.log(result);
     
                 window.location.reload(); // Consider updating UI state instead
             } catch (error) {
-                console.error("Error submitting editor content:", error.message);
+                alert("Error submitting editor content:", error.message);
                 // Inform the user about the error
             }
         }
@@ -56,6 +56,13 @@ function CustomEditor() {
     return (
         <div>
             <form onSubmit={handleSubmit}>
+            <input
+                    type="text"
+                    placeholder="Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                />
                 <CKEditor
                     editor={ClassicEditor}
                     onReady={editor => {
@@ -73,7 +80,7 @@ function CustomEditor() {
                                 '|',
                                 'fontfamily',
                                 '|',
-                                'bold', 'highlight', 'italic', 'strikethrough', 'subscript', 'superscript', 'code', 'underline', 'alignment',
+                                'bold', 'highlight', 'italic', 'strikethrough', 'subscript', 'superscript', 'underline', 'alignment',
                                 '|',
                                 'link', 'uploadImage', 'blockQuote', 'codeBlock',
                                 '|',

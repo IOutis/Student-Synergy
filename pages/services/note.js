@@ -29,17 +29,35 @@ export default function Note() {
         }
     };
 
+
+    const handleDelete = async(id)=>{
+       
+        const response = await fetch(`/api/editordelete?id=${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            });
+            const data = await response.json();
+            console.log(data);
+            if(!response.ok){
+                alert('Network response was not ok');
+            }
+            // else{
+            //     router.push('/services/notes');
+            //     }
+    }
+
     if (!note) {
         return <div>Loading...</div>;
     }
 
     return (
         <div>
-            <h2>{note.title}</h2>
-        
-            <p>{note.content}</p>
-            <div style={{width:"60vw", height:"100vh"}}>
-            <DisplayEditor note={note.content} /></div>
+            
+            <div style={{width:"60vw", height:"40vh", }}>
+                <h1 style={{color:"white", textAlign:"center"}} aria-readonly>{note.title}</h1>
+            <DisplayEditor note={note} />
+            <button onClick={()=>handleDelete(note._id)} style={{color : "white"}}>Delete</button>
+            </div>
         </div>
     );
 }
