@@ -13,7 +13,7 @@ export default function NotesHistory() {
         if (session) {
             const fetchNotes = async () => {
                 try {
-                    const res = await fetch(`/api/get_notes?user=${session.user.name}`);
+                    const res = await fetch(`/api/get_notes?user=${session.user.email}`);
                     if (!res.ok) {
                         throw new Error('Network response was not ok');
                     }
@@ -37,9 +37,9 @@ export default function NotesHistory() {
 
     return (
         <div>
-    <h3 style={{color:"white"}}>Notes History</h3>
+    <h3 >Notes History</h3>
     {notes.length ? (
-    <ul style={{ color: "white", paddingBottom: "6px" }}>
+    <ul style={{ paddingBottom: "6px" }}>
         {notes.map(note => (
             <li
                 style={{ marginBottom: '10px', cursor: "pointer" }} // Changed cursor to pointer
@@ -51,7 +51,7 @@ export default function NotesHistory() {
         ))}
     </ul>
 ) : (
-    <p style={{color:"white"}}>No Notes saved</p>
+    <p>No Notes saved</p>
 )}
 </div>
 

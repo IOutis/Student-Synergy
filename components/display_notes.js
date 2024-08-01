@@ -31,7 +31,7 @@ function DisplayEditor({note}) {
             // Prepare the form data to include both the content and the user's name
             const formData = new FormData();
             formData.append('content', content);
-            formData.append('user', session.user.name); 
+            formData.append('user', session.user.email); 
             
     
             // Send the form data to the server
@@ -116,7 +116,7 @@ function DisplayEditor({note}) {
                         
                     }}
                 />
-                <button type="submit" style={{ color: "white" }}>Update</button>
+                <button type="submit">Update</button>
             </form>
         </div>
     );

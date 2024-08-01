@@ -169,7 +169,7 @@ export default function NavComp() {
                     )}
                     {!session && (
                       <div className="hidden sm:ml-6 sm:block">
-                        <div className="flex space-x-4">
+                        <div className="flex space-x-4 text-white" >
                           <button onClick={() => signIn("google")}>Sign in</button>
                         </div>
                       </div>

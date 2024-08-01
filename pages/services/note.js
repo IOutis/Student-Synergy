@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
+import { asBlob } from 'html-docx-js-typescript';
 
 // Import the component dynamically with the correct capitalization
 const DisplayEditor = dynamic(() => import('../../components/display_notes'), { ssr: false });
@@ -28,6 +29,22 @@ export default function Note() {
             console.error("Error fetching note details:", error);
         }
     };
+    
+    const handleDownload = async (content) => {
+        try {
+          // Convert HTML to DOCX
+          const docxBuffer = await asBlob(content);
+      
+          // Create a link element to trigger download
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(new Blob([docxBuffer]));
+          link.download = `${note.title}.docx`;
+          link.click();
+        } catch (error) {
+          console.error("Error generating DOCX:", error.message);
+        }
+      };
+    
 
 
     const handleDelete = async(id)=>{
@@ -41,9 +58,9 @@ export default function Note() {
             if(!response.ok){
                 alert('Network response was not ok');
             }
-            // else{
-            //     router.push('/services/notes');
-            //     }
+            else{
+                router.push('/services/notes');
+                }
     }
 
     if (!note) {
@@ -54,9 +71,10 @@ export default function Note() {
         <div>
             
             <div style={{width:"60vw", height:"40vh", }}>
-                <h1 style={{color:"white", textAlign:"center"}} aria-readonly>{note.title}</h1>
+                <h1 style={{ textAlign:"center"}} aria-readonly>{note.title}</h1>
             <DisplayEditor note={note} />
-            <button onClick={()=>handleDelete(note._id)} style={{color : "white"}}>Delete</button>
+            <button onClick={()=>handleDelete(note._id)} >Delete</button>
+            <button onClick={()=>{handleDownload(note.content)}}>Download DOCX</button>
             </div>
         </div>
     );

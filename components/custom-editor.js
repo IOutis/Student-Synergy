@@ -29,7 +29,7 @@ function CustomEditor() {
             const formData = new FormData();
             formData.append('content', content);
             formData.append('title', title);
-            formData.append('user', session.user.name); 
+            formData.append('user', session.user.email); 
             
             try {
                 const res = await fetch('/api/editor', {
@@ -122,7 +122,7 @@ function CustomEditor() {
                         
                     }}
                 />
-                <button type="submit" style={{ color: "white" }}>Save</button>
+                <button type="submit">Save</button>
             </form>
         </div>
     );

@@ -8,25 +8,25 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) { */
   :root {
-    --foreground-rgb: 255, 255, 255;
+    /* --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0; */
     --ck-color-mention-background: black;
     --ck-color-mention-text: rgb(10, 10, 10);
   }
-}
+/* } */
 
-body {
+/* body {
   background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-    /* background-color: rgb(255, 250, 240); */
-}
+    /* background-color: rgb(255, 250, 240); 
+}*/
 
 @layer utilities {
   .text-balance {
