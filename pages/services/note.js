@@ -75,7 +75,7 @@ export default function Note() {
             <DisplayEditor note={note} />
             <button onClick={()=>handleDelete(note._id)} >Delete</button>
             <button onClick={()=>{handleDownload(note.content)}}>Download DOCX</button>
-            If the image you saved is not displayed then try "enabling editing mode".
+            <p>If the image you saved is not displayed then try "enabling editing mode".</p>
             </div>
         </div>
     );
