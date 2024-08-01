@@ -63,6 +63,20 @@ export default function Note() {
             console.error("Error generating DOCX:", error.message);
         }
     };
+    const handlePDF = async () =>{
+        try {
+            const updatedContent = await convertImagesToBase64(note.content);
+            const pdf = html2pdf()
+                .from(updatedContent)
+                .toPdf()
+                .get('pdf')
+                .then(pdf => {
+                    pdf.save(`${note.title}.pdf`);
+                });
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+        }
+    }
 
     const handleDelete = async (id) => {
         const response = await fetch(`/api/editordelete?id=${id}`, {
@@ -89,6 +103,7 @@ export default function Note() {
                 <DisplayEditor note={note} />
                 <button onClick={() => handleDelete(note._id)}>Delete</button>
                 <button onClick={() => { handleDownload(note.content) }}>Download DOCX</button>
+                <button onClick={() => { handlePDF(note.content) }}>Download PDF</button>
             </div>
         </div>
     );
