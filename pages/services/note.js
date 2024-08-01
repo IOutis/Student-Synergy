@@ -63,20 +63,32 @@ export default function Note() {
             console.error("Error generating DOCX:", error.message);
         }
     };
-    const handlePDF = async () =>{
+    const handlePDF = async () => {
         try {
             const updatedContent = await convertImagesToBase64(note.content);
-            const pdf = html2pdf()
-                .from(updatedContent)
-                .toPdf()
-                .get('pdf')
-                .then(pdf => {
-                    pdf.save(`${note.title}.pdf`);
-                });
+
+            // Create a temporary container
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = updatedContent;
+            document.body.appendChild(tempContainer);
+
+            // Generate PDF from the temporary container
+            const opt = {
+                margin: 1,
+                filename: `${note.title}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().from(tempContainer).set(opt).save().finally(() => {
+                // Remove the temporary container
+                document.body.removeChild(tempContainer);
+            });
         } catch (error) {
             console.error("Error generating PDF:", error);
         }
-    }
+    };
 
     const handleDelete = async (id) => {
         const response = await fetch(`/api/editordelete?id=${id}`, {
