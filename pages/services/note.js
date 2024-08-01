@@ -63,32 +63,6 @@ export default function Note() {
             console.error("Error generating DOCX:", error.message);
         }
     };
-    const handlePDF = async () => {
-        try {
-            const updatedContent = await convertImagesToBase64(note.content);
-
-            // Create a temporary container
-            const tempContainer = document.createElement('div');
-            tempContainer.innerHTML = updatedContent;
-            document.body.appendChild(tempContainer);
-
-            // Generate PDF from the temporary container
-            const opt = {
-                margin: 1,
-                filename: `${note.title}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-
-            html2pdf().from(tempContainer).set(opt).save().finally(() => {
-                // Remove the temporary container
-                document.body.removeChild(tempContainer);
-            });
-        } catch (error) {
-            console.error("Error generating PDF:", error);
-        }
-    };
 
     const handleDelete = async (id) => {
         const response = await fetch(`/api/editordelete?id=${id}`, {
@@ -115,7 +89,7 @@ export default function Note() {
                 <DisplayEditor note={note} />
                 <button onClick={() => handleDelete(note._id)}>Delete</button>
                 <button onClick={() => { handleDownload(note.content) }}>Download DOCX</button>
-                <button onClick={() => { handlePDF(note.content) }}>Download PDF</button>
+                <p>Works only in Desktop for some silly reason</p>
             </div>
         </div>
     );
