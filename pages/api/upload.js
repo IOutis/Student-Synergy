@@ -30,7 +30,7 @@ router.post(async (req, res) => {
     });
 
     const savedImage = await newImage.save();
-    const imageUrl = `http://localhost:3000/api/image/${savedImage._id}`;
+    const imageUrl = `https://student-synergy.vercel.app/api/image/${savedImage._id}`;
 
     res.status(201).json({
       url: imageUrl,
