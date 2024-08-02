@@ -1,9 +1,9 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from './auth/[...nextauth]'; // Adjust path as needed
+import { authOptions } from './auth/[...nextauth]';
 import dbConnect from '../../lib/dbconnect';
-// import User from '../../models/User';
-import {User} from '../../models/AllTaskModels';
-export default async function habitHandler(req, res) {
+import User from '../../models/User';
+
+export default async function dailyTaskHandler(req, res) {
   await dbConnect();
   const session = await getServerSession(req, res, authOptions);
 
@@ -13,15 +13,24 @@ export default async function habitHandler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      // Fetch the user based on session
       const user = await User.findOne({ email: session.user.email }).populate('dailyTasks');
-      // console.log("User got : ", user)
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      // Return the fetched habits
-      return res.status(200).json(user.dailyTasks);
+      const today = new Date().toISOString().split('T')[0];
+      const updatedDailyTasks = user.dailyTasks.map((dailyTask) => {
+        const lastUpdatedDate = dailyTask.lastUpdatedDate ? new Date(dailyTask.lastUpdatedDate).toISOString().split('T')[0] : null;
+        console.log("Title : ",dailyTask.title);
+        console.log("Last date : ",dailyTask.lastUpdatedDate);
+        if (lastUpdatedDate && lastUpdatedDate < today) {
+          console.log("Last Updated < today")
+          return { ...dailyTask.toObject(), isCompleted: false };
+        }
+        return dailyTask.toObject();
+      });
+
+      return res.status(200).json(updatedDailyTasks);
     } catch (err) {
       console.log("ERROR GETTING Dailies: ", err);
       return res.status(500).json({ error: err.message });

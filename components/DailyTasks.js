@@ -8,8 +8,8 @@ const DailyTasks = () => {
   const [editTask, setEditTask] = useState(null);
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [title, setTitle] = useState(''); // Initialize as empty string
-  const [description, setDescription] = useState(''); // Initialize as empty string
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
 
   useEffect(() => {
     if (session) {
@@ -48,8 +48,8 @@ const DailyTasks = () => {
       date: new Date().toISOString(),
     };
 
-    const method = editTask ? 'PUT' : 'POST'; // Use PUT for updates and POST for new tasks
-    const url = editTask ? `/api/newtasks/daily_tasks?id=${editTask._id}` : `/api/newtasks/daily_tasks`; // URL for editing or creating tasks
+    const method = editTask ? 'PUT' : 'POST';
+    const url = editTask ? `/api/newtasks/daily_tasks?id=${editTask._id}` : `/api/newtasks/daily_tasks`;
 
     const response = await fetch(url, {
       method,
@@ -63,14 +63,11 @@ const DailyTasks = () => {
     if (response.ok) {
       const savedTask = await response.json();
       if (editTask) {
-        // Update existing task in the state
         setDailyTasks(dailyTasks.map(task => task._id === savedTask._id ? savedTask : task));
       } else {
-        // Add new task to the state
         setDailyTasks([...dailyTasks, savedTask]);
       }
-      onClose(); // Close modal after saving
-      // Reset form fields
+      onClose();
       setEditTask(null);
       setTitle('');
       setDescription('');
@@ -79,12 +76,13 @@ const DailyTasks = () => {
     }
   };
 
-  const handleDisplay = (task) => {
-    setEditTask(task); // Set the selected task for editing
-    setTitle(task.title || ''); // Ensure title is a string
-    setDescription(task.description || ''); // Ensure description is a string
-    onOpen(); // Open modal
+  const handleEdit = (task) => {
+    setEditTask(task);
+    setTitle(task.title || '');
+    setDescription(task.description || '');
+    onOpen();
   };
+
   const handleDelete = async () => {
     if (!editTask) return;
 
@@ -98,8 +96,7 @@ const DailyTasks = () => {
 
     if (response.ok) {
       setDailyTasks(dailyTasks.filter(task => task._id !== editTask._id));
-      onClose(); // Close modal after deleting
-      // Reset form fields
+      onClose();
       setEditTask(null);
       setTitle('');
       setDescription('');
@@ -108,23 +105,51 @@ const DailyTasks = () => {
     }
   };
 
-  return (
-    <Box >
-      <Button onClick={() => {
-        setEditTask(null); // Ensure we're adding a new task, not editing
-        setTitle(''); // Clear title for new task
-        setDescription(''); // Clear description for new task
-        onOpen();
-      }} >+ Add Daily Task</Button>
+  const toggleCompletion = async (task) => {
+    const updatedTask = { ...task, isCompleted: !task.isCompleted };
 
-      {/* Modal for adding/editing daily tasks */}
+    const response = await fetch(`/api/daily_tasks_status/${task._id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.accessToken}`
+      },
+      body: JSON.stringify({ isCompleted: updatedTask.isCompleted }),
+    });
+
+    if (response.ok) {
+      const updatedDailyTask = await response.json();
+      setDailyTasks(dailyTasks.map(t => t._id === updatedDailyTask._id ? updatedDailyTask : t));
+    } else {
+      console.error('Failed to update task status');
+    }
+  };
+
+  return (
+    <Box>
+      {/* <Button onClick={() => {
+        setEditTask(null);
+        setTitle('');
+        setDescription('');
+        onOpen();
+      }}>+ Add Daily Task</Button> */}
+      <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" 
+      onClick={() => {
+        setEditTask(null);
+        setTitle('');
+        setDescription('');
+        onOpen();
+      }}
+      >+ Add Daily Task</button>
+
+
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay bg="rgba(0, 0, 0, 0.6)" />
+        <ModalOverlay bg="rgba(0, 0, 0, 0.9)" />
         <ModalContent bg="gray.800" color="white" borderRadius="md" maxWidth="md" mx="auto" mt="10">
-          <ModalHeader>{editTask ? 'Edit Daily Task' : 'Add Daily Task'}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <form onSubmit={handleAddOrEditTask} style={{ width: "40px", height: "fitContent", marginLeft: "30%" }}>
+          <ModalHeader style={{display:"flex", justifyContent:"center", alignItems:"center", marginTop:"30px", marginBottom:"10px", fontWeight:"bold"}}>{editTask ? 'Edit Daily Task' : 'Add Daily Task'}</ModalHeader>
+          <ModalCloseButton style={{marginLeft:"30%"}}/>
+          <ModalBody >
+            <form onSubmit={handleAddOrEditTask} style={{ width: "40px", height: "fitContent", marginLeft: "40%" }}>
               <FormControl mb="4">
                 <FormLabel>Title</FormLabel>
                 <Input
@@ -143,18 +168,22 @@ const DailyTasks = () => {
                   style={{ color: "black" }}
                 />
               </FormControl>
-              <Button colorScheme="blue" type="submit">
-                Save
-              </Button>
+              <button type="submit" class="mt-3 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Save</button>
+
               {editTask && (
-                <Button colorScheme="red" onClick={handleDelete} style={{ marginLeft: '10px' }}>
-                  Delete
-                </Button>
+                // <Button colorScheme="red" onClick={handleDelete} style={{ marginLeft: '10px' }}>
+                //   Delete
+                // </Button>
+                <button type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                onClick={handleDelete}>Delete
+                </button>
               )}
             </form>
+            {/* <Button variant="ghost" onClick={onClose}>Cancel</Button> */}
+            <button type="button" onClick={onClose} class="ml-[40%] mt-2 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cancel</button>
+
           </ModalBody>
           <ModalFooter>
-            <Button variant="ghost" onClick={onClose}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -167,12 +196,27 @@ const DailyTasks = () => {
             borderRadius="lg"
             p="4"
             my="2"
-            onClick={() => handleDisplay(task)}
-            style={{ cursor: 'pointer' }}
+            style={{ backgroundColor: task.isCompleted ? "rgb(34 197 94)" : "rgb(239 68 68)" , color:"White", fontWeight:"bold",borderRadius:"15px", paddingLeft:"10px", paddingTop:"4px", boxShadow:"1px 1px 10px 1px grey", marginBottom:"10px"}}
           >
             <h2>{task.title}</h2>
             <p>{task.description}</p>
-            <p>{task.completed ? 'Completed' : 'Incomplete'}</p>
+            <p>Streak : {task.streak}</p>
+            <p>{task.isCompleted ? 'Completed' : 'Incomplete'}</p>
+            {/* <Button onClick={() => toggleCompletion(task)}>
+              {task.isCompleted ? 'Mark Incomplete' : 'Mark Complete'}
+            </Button> */}
+            <button
+            type="button"
+            className={`mt-[6px] focus:outline-none text-white ${!task.isCompleted ? 'bg-green-700 hover:bg-green-800 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800' : 'bg-red-700 hover:bg-red-800 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800'} font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2`}
+            onClick={() => toggleCompletion(task)}>
+            {task.isCompleted ? 'Mark Incomplete' : 'Mark Complete'}
+            </button>
+            {/* <Button onClick={() => handleEdit(task)} style={{ marginLeft: '10px' }}>
+              Edit
+            </Button> */}
+            <button type="button" class=" text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" onClick={() => handleEdit(task)}>
+              Edit
+            </button>
           </Box>
         ))}
       </Box>

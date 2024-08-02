@@ -149,8 +149,8 @@ const Habits = () => {
 
   return (
     <Box>
-      <Button onClick={handleOpenAddHabit}>+ Add Habit</Button>
-
+      {/* <Button onClick={handleOpenAddHabit}>+ Add Habit</Button> */}
+      <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" onClick={handleOpenAddHabit}>+ Add Habit</button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay bg="rgba(0, 0, 0, 0.9)" />
         <ModalContent bg="gray.800" color="white" borderRadius="md" maxWidth="md" mx="auto" mt="10">
@@ -234,10 +234,11 @@ const Habits = () => {
 
       <Box mt="6">
         {habits.map((habit, index) => (
-          <Box key={habit._id} p="4" borderWidth="1px" borderRadius="md" mb="4"  style={{ backgroundColor: habit.isCompleted ? "rgb(34 197 94)" : "rgb(239 68 68)" }}>
+          <Box key={habit._id} p="4" borderWidth="1px" borderRadius="md" mb="4"  style={{ backgroundColor: habit.isCompleted ? "rgb(34 197 94)" : "rgb(239 68 68)" , color:"White", fontWeight:"bold", borderRadius:"15px", paddingLeft:"10px", paddingTop:"4px",boxShadow:"1px 1px 10px 1px grey", marginBottom:"10px"}}>
             <Box fontWeight="bold">{habit.title}</Box>
             <Box>{habit.description}</Box>
-            <Box>{habit.streak}</Box>
+            <Box>Streak : {habit.streak}</Box>
+            <Box>{habit.isCompleted ? 'Completed':'Not Completed'}</Box>
             <button type="button" class="mt-[6px] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" onClick={() => handleDisplay(index)}>
               Edit
             </button>
