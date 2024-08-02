@@ -116,7 +116,6 @@ const Habits = () => {
     setReminderTime(habit.reminderTime ? new Date(habit.reminderTime).toISOString().slice(0, 16) : '');
     setIsCompleted(habit.isCompleted);
     onOpen();
-    resetFormFields();
   };
 
   const handleStatus = async (habitId, isCompleted) => {
@@ -142,9 +141,15 @@ const Habits = () => {
     }
   };
 
+  const handleOpenAddHabit = () => {
+    resetFormFields();
+    setEditHabit(null);
+    onOpen();
+  };
+
   return (
     <Box>
-      <Button onClick={onOpen}>+ Add Habit</Button>
+      <Button onClick={handleOpenAddHabit}>+ Add Habit</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay bg="rgba(0, 0, 0, 0.9)" />
@@ -212,49 +217,36 @@ const Habits = () => {
                   style={{ color: "black" }} 
                 />
               </FormControl>
-              <Button colorScheme="blue" type="submit">
-                Save
-              </Button>
+              <button type="submit" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Save</button>
               {editHabit && (
-                // <Button colorScheme="red" ml="4" mr="4" onClick={handleDelete}>
-                //   Delete
-                // </Button>
                 <button type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
                 onClick={handleDelete}>Delete
                 </button>
               )}
             </form>
-            <Button variant="outline" ml="30" onClick={onClose}>
+            <button type="button" onClick={onClose} class="ml-[30%] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Close</button>
+            {/* <Button variant="outline" ml="30%" onClick={onClose}>
               Close
-            </Button>
+            </Button> */}
           </ModalBody>
-          
         </ModalContent>
       </Modal>
 
-      {/* List of Habits */}
       <Box mt="6">
         {habits.map((habit, index) => (
           <Box key={habit._id} p="4" borderWidth="1px" borderRadius="md" mb="4"  style={{ backgroundColor: habit.isCompleted ? "rgb(34 197 94)" : "rgb(239 68 68)" }}>
             <Box fontWeight="bold">{habit.title}</Box>
             <Box>{habit.description}</Box>
             <Box>{habit.streak}</Box>
-            {/* <Button mt="2" mr="4" colorScheme="teal" onClick={() => handleDisplay(index)}>
-              Edit
-            </Button> */}
             <button type="button" class="mt-[6px] text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" onClick={() => handleDisplay(index)}>
               Edit
             </button>
-            {/* <Button mt="2" ml="4" colorScheme="blue" onClick={() => handleStatus(habit._id, !habit.isCompleted)}>
-              {habit.isCompleted ? 'Mark as Not Done' : 'Mark as Done'}
-            </Button> */}
             <button
             type="button"
             className={`focus:outline-none text-white ${!habit.isCompleted ? 'bg-green-700 hover:bg-green-800 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800' : 'bg-red-700 hover:bg-red-800 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800'} font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2`}
             onClick={() => handleStatus(habit._id, !habit.isCompleted)}>
             {habit.isCompleted ? 'Mark as Not Done' : 'Mark as Done'}
             </button>
-
           </Box>
         ))}
       </Box>
