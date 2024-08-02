@@ -55,7 +55,7 @@ function DisplayEditor({note}) {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} style={{width:"50vw", display:"flex", flexDirection:"column", justifyContent:"center", alignContent:"center", alignItems:"center"}}>
                 <CKEditor
                     editor={ClassicEditor}
                     data={editorData}
@@ -116,7 +116,8 @@ function DisplayEditor({note}) {
                         
                     }}
                 />
-                <button type="submit">Update</button>
+                {/* <button type="submit">Update</button> */}
+                <button type="submit" class="mt-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update</button>
             </form>
         </div>
     );

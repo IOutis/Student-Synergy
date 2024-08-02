@@ -7,15 +7,18 @@ import TodoList from '../components/TodoList';
 import Rewards from '../components/Rewards';
 import NavComp from '../components/NavComp';
 import { useSession } from 'next-auth/react';
+import LoadingComp from '../components/LoadingComp'
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
   if (!session) {
-    return ( <div>  <NavComp></NavComp>
-    <p className="text-[26px] ml-[36%] mr-[30%]" >Please sign in to view your tasks.</p></div>);
+    return (<div> <NavComp></NavComp>
+      <div style={{ display:"flex", justifyContent:"center", marginTop:"6vh"}}>
+      <p>Please sign in to view your tasks.</p></div>
+      </div>);
   }
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <LoadingComp></LoadingComp>;
   }
 
   return (

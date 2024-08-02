@@ -3,11 +3,16 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { asBlob } from 'html-docx-js-typescript';
 import { saveAs } from 'file-saver';
+import LoadingComp from '../../components/LoadingComp';
+import { useSession } from "next-auth/react";
+import NavComp from '../../components/NavComp';
+
 
 // Import the component dynamically with the correct capitalization
 const DisplayEditor = dynamic(() => import('../../components/display_notes'), { ssr: false });
 
 export default function Note() {
+    const { data: session, status } = useSession();
     const router = useRouter();
     const { id } = router.query;
     const [note, setNote] = useState(null);
@@ -79,17 +84,30 @@ export default function Note() {
     };
 
     if (!note) {
-        return <div>Loading...</div>;
+        return <LoadingComp></LoadingComp>;
     }
+    if (!session) {
+        return (<div> <NavComp></NavComp>
+        <div style={{ display:"flex", justifyContent:"center", marginTop:"6vh"}}>
+        <p>Please sign in to view your tasks.</p></div>
+        </div>);
+      }
+
+    
 
     return (
         <div>
-            <div style={{ width: "60vw", height: "40vh" }}>
-                <h1 style={{ textAlign: "center" }} aria-readonly>{note.title}</h1>
+            <NavComp></NavComp>
+            <div style={{ height: "60vh", alignItems:"center",  marginTop:"2vh",paddingBottom:"2vh", display:"flex", flexDirection:"column", alignContent:"center", alignItems:"center"
+            }}>
+                <h1 style={{ textAlign: "center", fontWeight:"bold" }} aria-readonly>{note.title}</h1>
                 <DisplayEditor note={note} />
-                <button onClick={() => handleDelete(note._id)}>Delete</button>
-                <button onClick={() => { handleDownload(note.content) }}>Download DOCX</button>
-                <p>Works only in Desktop for some silly reason</p>
+                <button onClick={() => handleDelete(note._id)} type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
+                {/* <button onClick={() => handleDelete(note._id)}>Delete</button> */}
+                {/* <button onClick={() => { handleDownload(note.content) }}>Download DOCX</button> */}
+                <button onClick={() => { handleDownload(note.content) }} type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Download DOCX</button>
+                <p><em>Works only in Desktop for some silly reason. Format error in the mobiles</em></p>
+                <p><strong>For mobiles, after downloading the document convert it into PDF on <u><a href="https://cloudconvert.com/" target="_blank">cloudconvert website</a></u> , then you can view the document</strong></p>
             </div>
         </div>
     );

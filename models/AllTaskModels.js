@@ -25,6 +25,14 @@ const DailyTaskSchema = new mongoose.Schema({
   isStreakLocked: { type: Boolean, default: false },
 }, { collection: 'userNewDailyTasks' });
 
+const NewTaskSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  dueDate: Date,
+  completed: { type: Boolean, default: false },
+  priority: { type: Number, default: 1 }, // Optional field
+}, { collection: 'userNewTasks' });
+
 
 // User Schema
 const UserSchema = new mongoose.Schema({
@@ -39,6 +47,7 @@ const UserSchema = new mongoose.Schema({
 // Export models
 const Habit = mongoose.models.NewHabit || mongoose.model('NewHabit', HabitSchema);
 const DailyTask = mongoose.models.NewDailyTask || mongoose.model('NewDailyTask', DailyTaskSchema);
+const NewTask = mongoose.models.NewTask || mongoose.model('NewTask', NewTaskSchema);
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
-export { Habit, DailyTask, User };
+export { Habit, DailyTask, User, NewTask };

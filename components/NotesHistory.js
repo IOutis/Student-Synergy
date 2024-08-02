@@ -29,25 +29,33 @@ export default function NotesHistory() {
     }, [session]);
 
     if (!session) {
-        return <div><p onClick={() => signIn("google")} style={{ cursor: "pointer" }}>Sign in</p></div>;
+        return (<div> <NavComp></NavComp>
+            <div style={{ display:"flex", justifyContent:"center", marginTop:"6vh"}}>
+            <p>Please sign in to view your tasks.</p></div>
+            </div>);
     }
     const  handleSubmit = async (id) =>{
           router.push(`/services/note?id=${id}`);
     }
 
     return (
-        <div>
-    <h3 >Notes History</h3>
+        <div className="overflow-y-scroll" style={{ maxHeight:"87vh"}}>
+    <h3 className='mt-3 pb-3'>Notes History</h3>
     {notes.length ? (
-    <ul style={{ paddingBottom: "6px" }}>
+    <ul style={{ paddingBottom: "3px",}}>
         {notes.map(note => (
-            <li
-                style={{ marginBottom: '10px', cursor: "pointer" }} // Changed cursor to pointer
+            <div className='h-[6vh]  bg-gray-200 hover:bg-gray-200 hover:scale-110 ' 
+            style={{ marginBottom:"3px",marginTop:"6px" }}
+            >
+            <li 
+                 // Changed cursor to pointer
+                style={{paddingLeft:"5vw",marginTop:"6px", paddingTop:"3px" }}
                 key={note._id}
                 onClick={() => handleSubmit(note._id)}
             >
-                {note.title}
+                <p style={{ marginTop:"6px", }}>{note.title}</p>
             </li>
+            </div>
         ))}
     </ul>
 ) : (
