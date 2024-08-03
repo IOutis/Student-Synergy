@@ -52,7 +52,7 @@ export default function NotesHistory() {
                     {notes.map(note => (
                         <div
                             key={note._id} // Add key prop here
-                            className='h-[6vh] bg-gray-200 hover:bg-gray-200 hover:scale-110'
+                            className='h-[6vh] bg-gray-200 hover:bg-gray-900 hover:scale-110 hover:text-white hover:cursor-pointer'
                             style={{ marginBottom: "3px", marginTop: "6px" }}
                         >
                             <li
