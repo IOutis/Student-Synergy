@@ -36,13 +36,26 @@ const NewTaskSchema = new mongoose.Schema({
 
 // User Schema
 const UserSchema = new mongoose.Schema({
-    email: String,
-    name: String,
-    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewTask' }],
-    dailyTasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewDailyTask' }],
-    habits: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewHabit' }],
-    rewards: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewReward' }],
-  }, { collection: 'Users' });
+  email: String,
+  tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewTask' }],
+  dailyTasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewDailyTask' }],
+  habits: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewHabit' }],
+  rewards: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewReward' }],
+  level: { type: Number, default: 1 },
+  experience: { type: Number, default: 0 },
+  skills: [{ type: String }],
+  coins: { type: Number, default: 0 }
+}, { collection: 'Users' });
+
+
+const LevelSchema = new mongoose.Schema({
+  level: { type: Number, required: true },
+  expRequired: { type: Number, required: true },
+  title: { type: String, required: true }
+}, { collection: 'Levels' });
+
+const Level = mongoose.models.Level || mongoose.model('Level', LevelSchema);
+
 
 // Export models
 const Habit = mongoose.models.NewHabit || mongoose.model('NewHabit', HabitSchema);
@@ -50,4 +63,4 @@ const DailyTask = mongoose.models.NewDailyTask || mongoose.model('NewDailyTask',
 const NewTask = mongoose.models.NewTask || mongoose.model('NewTask', NewTaskSchema);
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
-export { Habit, DailyTask, User, NewTask };
+export { Habit, DailyTask, User, NewTask,Level };

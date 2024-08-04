@@ -14,7 +14,7 @@ export default async (req, res) => {
   const { email } = session.user;
 
   await dbConnect();
-  console.log("Mehtod = ", req.method)
+  // console.log("Mehtod = ", req.method)
   if (req.method === 'POST') {
     try {
       const { title, description, frequency } = req.body;

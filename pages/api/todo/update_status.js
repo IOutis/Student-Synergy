@@ -1,6 +1,8 @@
 // pages/api/todo/update_status.js
 import dbConnect from '../../../lib/dbconnect';
 import NewTask from '../../../models/TaskModel';
+import User from '../../../models/User';
+import { gainExp } from '../../../lib/leveling';
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -16,6 +18,13 @@ export default async function handler(req, res) {
       );
       if (!updatedTask) {
         return res.status(404).json({ message: 'Task not found' });
+      }
+      const user = await User.findOne({ tasks: id });
+      if(completed){
+        await gainExp(user._id, 8);
+      }
+      else{
+        await gainExp(user._id, -10);
       }
       return res.status(200).json(updatedTask);
     } catch (error) {

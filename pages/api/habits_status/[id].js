@@ -1,5 +1,7 @@
 import dbConnect from '../../../lib/dbconnect';
 import NewHabit from '../../../models/Habits';
+import User from '../../../models/User';
+import { gainExp } from '../../../lib/leveling';
 
 export default async function handler(req, res) {
   if (req.method !== 'PATCH') {
@@ -27,12 +29,17 @@ export default async function handler(req, res) {
 
     // Determine if the streak should be locked based on the last updated date
     let streakLocked = lastUpdatedDate <= today;
+    const user = await User.findOne({ habits: id });
+    console.log(user);
 
     if (isCompleted) {
       newStreak += 1; // Increment the streak if the habit is completed
      // Lock the streak since it's being updated
-    } else {
-      newStreak -= 1; // Decrement the streak if the habit is not completed
+    await gainExp(user._id, 10);
+    
+  } else {
+    newStreak -= 1; // Decrement the streak if the habit is not completed
+    await gainExp(user._id, -15);
        // Unlock the streak since it's being updated
     }
 
@@ -49,6 +56,7 @@ export default async function handler(req, res) {
         },
         { new: true }
       );
+     
     
       return res.status(200).json(updatedHabit);
     } 

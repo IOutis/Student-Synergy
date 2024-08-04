@@ -1,5 +1,7 @@
 import dbConnect from '../../../lib/dbconnect';
 import DailyTask from '../../../models/DailyTasks';
+import User from '../../../models/User';
+import { gainExp } from '../../../lib/leveling';
 
 export default async function handler(req, res) {
   if (req.method !== 'PATCH') {
@@ -24,11 +26,15 @@ export default async function handler(req, res) {
     const current = new Date();
 
     let streakLocked = lastUpdatedDate <= today;
+    const user = await User.findOne({ dailyTasks: id });
 
     if (isCompleted) {
       newStreak += 1;
+      await gainExp(user._id, 10);
     } else {
       newStreak -= 1;
+      await gainExp(user._id, -15);
+
     }
     console.log("isCompleted : ", isCompleted);
     console.log("isCompleted{db} : ", dailyTask.isCompleted);

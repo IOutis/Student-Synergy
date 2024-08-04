@@ -11,7 +11,7 @@ const navigation = [
 
 const services = [
   { name: "Pomodoro", href: "/services/pomodoro", current: false },
-  { name: "Task Schedule", href: "/services/task-schedule", current: false },
+  { name: "Task Schedule", href: "/Tracker", current: false },
   { name: "Notes", href: "/services/notes", current: false },
 ];
 
