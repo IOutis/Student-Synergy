@@ -149,14 +149,14 @@ const DailyTasks = () => {
           <ModalHeader style={{display:"flex", justifyContent:"center", alignItems:"center", marginTop:"30px", marginBottom:"10px", fontWeight:"bold"}}>{editTask ? 'Edit Daily Task' : 'Add Daily Task'}</ModalHeader>
           <ModalCloseButton style={{marginLeft:"30%"}}/>
           <ModalBody >
-            <form onSubmit={handleAddOrEditTask} style={{ width: "40px", height: "fitContent", marginLeft: "40%" }}>
+            <form onSubmit={handleAddOrEditTask} style={{ height: "fitContent",  }}>
               <FormControl mb="4">
                 <FormLabel>Title</FormLabel>
                 <Input
                   name="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  style={{ color: "black" }}
+                  style={{  }}
                 />
               </FormControl>
               <FormControl mb="4">
@@ -165,7 +165,7 @@ const DailyTasks = () => {
                   name="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  style={{ color: "black" }}
+                  style={{  }}
                 />
               </FormControl>
               <button type="submit" class="mt-3 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Save</button>

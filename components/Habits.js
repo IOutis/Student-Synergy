@@ -157,7 +157,7 @@ const Habits = () => {
           <ModalHeader>{editHabit ? 'Edit Habit' : 'Add Habit'}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <form onSubmit={handleAddHabit} style={{ width: "100%", marginLeft: "30%" }}>
+            <form onSubmit={handleAddHabit} style={{ width: "100%",  }}>
               <FormControl mb="4">
                 <FormLabel>Title</FormLabel>
                 <Input 
@@ -165,7 +165,7 @@ const Habits = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
-                  style={{color:"black"}}
+                  
                 />
               </FormControl>
               <FormControl mb="4">
@@ -174,7 +174,7 @@ const Habits = () => {
                   name="description" 
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  style={{ color: "black" }} 
+                   
                 />
               </FormControl>
               <FormControl mb="4">
@@ -183,11 +183,11 @@ const Habits = () => {
                   name="frequency" 
                   value={frequency}
                   onChange={(e) => setFrequency(e.target.value)}
-                  style={{ color: "black" }}
+                  
                 >
-                  <option value="daily">Daily</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
+                  <option value="daily" style={{color:"black"}}>Daily</option>
+                  <option value="weekly" style={{color:"black"}}>Weekly</option>
+                  <option value="monthly" style={{color:"black"}}>Monthly</option>
                 </Select>
               </FormControl>
               <FormControl mb="4">
@@ -196,7 +196,7 @@ const Habits = () => {
                   type="datetime-local" 
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
-                  style={{ color: "black" }} 
+                   
                 />
               </FormControl>
               <FormControl mb="4">
@@ -205,7 +205,7 @@ const Habits = () => {
                   type="datetime-local" 
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  style={{ color: "black" }} 
+                   
                 />
               </FormControl>
               <FormControl mb="4">
@@ -214,7 +214,7 @@ const Habits = () => {
                   type="datetime-local" 
                   value={reminderTime}
                   onChange={(e) => setReminderTime(e.target.value)}
-                  style={{ color: "black" }} 
+                  
                 />
               </FormControl>
               <button type="submit" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Save</button>

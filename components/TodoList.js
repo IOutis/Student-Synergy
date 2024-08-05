@@ -118,13 +118,13 @@ const TodoList = () => {
           >
             {currentTask ? 'Edit Task' : 'Add Task'}
           </ModalHeader>
-          <ModalCloseButton style={{ paddingLeft: "16vw" }} />
+          <ModalCloseButton style={{  }} />
           <ModalBody>
-            <form onSubmit={handleAddOrEditTask} style={{ width: "100%", marginLeft: "44%" }}>
+            <form onSubmit={handleAddOrEditTask} style={{ width: "100%",  }}>
               <FormControl>
                 <FormLabel>Title</FormLabel>
                 <Input
-                  style={{ color: "black", paddingLeft: "6px" }}
+                  style={{  paddingLeft: "6px" }}
                   name="title"
                   defaultValue={currentTask ? currentTask.title : ''}
                 />
@@ -132,7 +132,7 @@ const TodoList = () => {
               <FormControl>
                 <FormLabel>Description</FormLabel>
                 <Input
-                  style={{ color: "black", paddingLeft: "6px" }}
+                  style={{  paddingLeft: "6px" }}
                   name="description"
                   defaultValue={currentTask ? currentTask.description : ''}
                 />
@@ -140,7 +140,7 @@ const TodoList = () => {
               <FormControl>
                 <FormLabel>Due Date</FormLabel>
                 <Input
-                  style={{ color: "black", paddingLeft: "6px" }}
+                  style={{  paddingLeft: "6px" }}
                   name="dueDate"
                   type="date"
                   defaultValue={currentTask ? new Date(currentTask.dueDate).toISOString().split('T')[0] : ''}
@@ -149,7 +149,7 @@ const TodoList = () => {
               <FormControl>
                 <FormLabel>Priority (1 is Highest)</FormLabel>
                 <Input
-                  style={{ color: "black", paddingLeft: "6px" }}
+                  style={{  paddingLeft: "6px" }}
                   placeholder="1 is highest"
                   name="priority"
                   type="number"
