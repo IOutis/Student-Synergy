@@ -1,8 +1,8 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from './auth/[...nextauth]'; // Adjust path as needed
 import dbConnect from '../../lib/dbconnect';
-// import User from '../../models/User';
-import {User} from '../../models/AllTaskModels'
+import { User } from '../../models/AllTaskModels';
+import { getISOWeek } from 'date-fns';
 
 export default async function habitHandler(req, res) {
   await dbConnect();
@@ -21,17 +21,47 @@ export default async function habitHandler(req, res) {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      // Compare today's date with the lastUpdatedDate of each habit
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date();
+      const todayString = today.toISOString().split('T')[0];
+
       const updatedHabits = user.habits.map((habit) => {
-        const lastUpdatedDate = habit.lastUpdatedDate ? new Date(habit.lastUpdatedDate).toISOString().split('T')[0] : null;
-        if (lastUpdatedDate && lastUpdatedDate < today) {
-          return { ...habit.toObject(), isCompleted: false }; // Change isCompleted to false if lastUpdatedDate is older than today
+        const lastUpdatedDate = habit.lastUpdatedDate ? new Date(habit.lastUpdatedDate) : null;
+        if (!lastUpdatedDate) {
+          return habit.toObject();
         }
-        return habit.toObject();
+
+        const habitData = habit.toObject();
+        habitData.isCompleted = true; // Reset isCompleted to true for checking
+        
+        switch (habit.frequency) {
+          case 'daily':
+            if (lastUpdatedDate.toISOString().split('T')[0] < todayString) {
+              habitData.isCompleted = false;
+            }
+            break;
+          case 'weekly':
+            console.log("In weekly");
+            const lastUpdatedWeek = getISOWeek(lastUpdatedDate);
+            console.log("last updated week = ", lastUpdatedWeek);
+            console.log("last updated date = ", lastUpdatedDate);
+            const currentWeek = getISOWeek(today);
+            console.log("current week = ", currentWeek);
+            if (lastUpdatedWeek > currentWeek) {
+              habitData.isCompleted = false;
+            }
+            break;
+          case 'monthly':
+            const lastUpdatedMonth = lastUpdatedDate.getMonth();
+            const currentMonth = today.getMonth();
+            if (lastUpdatedMonth < currentMonth) {
+              habitData.isCompleted = false;
+            }
+            break;
+        }
+        
+        return habitData;
       });
 
-      // Return the updated habits
       return res.status(200).json(updatedHabits);
     } catch (err) {
       console.log("ERROR GETTING HABITS: ", err);

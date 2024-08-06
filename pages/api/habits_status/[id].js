@@ -30,18 +30,20 @@ export default async function handler(req, res) {
     // Determine if the streak should be locked based on the last updated date
     let streakLocked = lastUpdatedDate <= today;
     const user = await User.findOne({ habits: id });
-    console.log(user);
+    // console.log(user);
 
     if (isCompleted) {
       newStreak += 1; // Increment the streak if the habit is completed
      // Lock the streak since it's being updated
-    await gainExp(user._id, 10);
+    await gainExp(user._id, 10).then(()=>{console.log("succesfully done")}).catch((err)=>{console.log(err)});
     
   } else {
     newStreak -= 1; // Decrement the streak if the habit is not completed
     await gainExp(user._id, -15);
        // Unlock the streak since it's being updated
     }
+
+    
 
     // Update the habit document with the new streak and lock status
     if (streakLocked) {
@@ -60,6 +62,9 @@ export default async function handler(req, res) {
     
       return res.status(200).json(updatedHabit);
     } 
+    else{
+      return res.status(500).json("Something wrong happened")
+    }
   } catch (err) {
     return res.status(500).json({ message: 'Internal Server Error', error: err.message });
   }

@@ -28,6 +28,7 @@ export default async function handler(req, res) {
       }
       return res.status(200).json(updatedTask);
     } catch (error) {
+      console.log("Error in update")
       return res.status(500).json({ error: error.message });
     }
   } else {

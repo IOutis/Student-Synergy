@@ -58,19 +58,39 @@ const Profile = () => {
   }
 
   let nextLevelExp, userLevelName;
-  if (userInfo.experience <= 30) {
-    nextLevelExp = 30;
-    userLevelName = "Newbie";
-  } else if (userInfo.experience > 30 && userInfo.experience < 100) {
-    nextLevelExp = 100;
-    userLevelName = "Novice";
-  } else if (userInfo.experience > 100 && userInfo.experience < 170) {
-    nextLevelExp = 170;
-    userLevelName = "Apprentice";
-  } else if (userInfo.experience > 170 && userInfo.experience < 240) {
-    nextLevelExp = 240;
-    userLevelName = "Journeyman";
-  }
+
+if (userInfo.experience <= 50) {
+  nextLevelExp = 50;
+  userLevelName = "Novice";
+} else if (userInfo.experience > 50 && userInfo.experience <= 150) {
+  nextLevelExp = 150;
+  userLevelName = "Apprentice";
+} else if (userInfo.experience > 150 && userInfo.experience <= 300) {
+  nextLevelExp = 300;
+  userLevelName = "Journeyman";
+} else if (userInfo.experience > 300 && userInfo.experience <= 500) {
+  nextLevelExp = 500;
+  userLevelName = "Skilled";
+} else if (userInfo.experience > 500 && userInfo.experience <= 750) {
+  nextLevelExp = 750;
+  userLevelName = "Expert";
+} else if (userInfo.experience > 750 && userInfo.experience <= 1050) {
+  nextLevelExp = 1050;
+  userLevelName = "Master";
+} else if (userInfo.experience > 1050 && userInfo.experience <= 1400) {
+  nextLevelExp = 1400;
+  userLevelName = "Grandmaster";
+} else if (userInfo.experience > 1400 && userInfo.experience <= 1800) {
+  nextLevelExp = 1800;
+  userLevelName = "Legend";
+} else if (userInfo.experience > 1800 && userInfo.experience <= 2250) {
+  nextLevelExp = 2250;
+  userLevelName = "Champion";
+} else if (userInfo.experience > 2250) {
+  nextLevelExp = 2750; // Assuming the highest level is Mythic
+  userLevelName = "Mythic";
+}
+
 
   return (
     <Box p="4" borderWidth="1px" borderRadius="lg">
