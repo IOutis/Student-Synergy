@@ -12,6 +12,7 @@ export default function Home() {
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
     >
       <NavComp></NavComp>
+      <h3 className="flex justify-center items-center">Still under development. Stay tuned</h3>
       
     </main>
   );
