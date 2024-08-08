@@ -21,10 +21,10 @@ export default async function dailyTaskHandler(req, res) {
       const today = new Date().toISOString().split('T')[0];
       const updatedDailyTasks = user.dailyTasks.map((dailyTask) => {
         const lastUpdatedDate = dailyTask.lastUpdatedDate ? new Date(dailyTask.lastUpdatedDate).toISOString().split('T')[0] : null;
-        console.log("Title : ",dailyTask.title);
-        console.log("Last date : ",dailyTask.lastUpdatedDate);
+        // console.log("Title : ",dailyTask.title);
+        // console.log("Last date : ",dailyTask.lastUpdatedDate);
         if (lastUpdatedDate && lastUpdatedDate < today) {
-          console.log("Last Updated < today")
+          // console.log("Last Updated < today")
           return { ...dailyTask.toObject(), isCompleted: false };
         }
         return dailyTask.toObject();
