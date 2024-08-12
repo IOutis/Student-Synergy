@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 function MyPosts() {
     const [posts, setPosts] = useState([]);
@@ -32,9 +33,9 @@ function MyPosts() {
         <div>
             {posts.map(post => (
                 <div key={post._id} className="post">
-                    <a href={`/post/${post._id}`}><h2>{post.title}</h2>
+                    <Link href={`/post/${post._id}`}><h2>{post.title}</h2>
                     <div dangerouslySetInnerHTML={{ __html: truncateContent(post.content) }} />
-                    Read more</a>
+                    Read more</Link>
                     {/* <p><strong>Keywords:</strong> {post.keywords.join(', ')}</p> */}
                     {/* <p><strong>Posted by:</strong> {post.user}</p> */}
                 </div>

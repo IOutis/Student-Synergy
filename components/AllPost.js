@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 function AllPosts() {
@@ -39,10 +40,10 @@ function AllPosts() {
         <div>
             {posts.map(post => (
                 <div key={post._id} className="post p-3" style={{borderColor:"black", backgroundColor:"#dadada", borderBlockColor:"black", borderWidth:"2px"}}>
-                    <a href={`/post/${post._id}`}><h2>{post.title}</h2>
+                    <Link href={`/post/${post._id}`}><h2>{post.title}</h2>
                     <p><strong>Posted by:</strong> {post.user}</p>
                     <div dangerouslySetInnerHTML={{ __html: truncateContent(post.content) }} />
-                    Read more</a>
+                    Read more</Link>
                 </div>
             ))}
         </div>
