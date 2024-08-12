@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState, Fragment } from "react";
-import { Disclosure, Menu, Transition,MenuItem,MenuItems,MenuButton,MenuHeading,DisclosurePanel,DisclosureButton } from "@headlessui/react";
+import React, { Fragment, useState, useEffect } from "react";
+import { Disclosure, Menu, Transition,MenuButton,MenuItems,MenuItem,DisclosureButton,DisclosurePanel } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSession, signIn, signOut } from "next-auth/react";
 
@@ -23,63 +23,6 @@ export default function NavComp() {
   const { data: session } = useSession();
   const [notifications, setNotifications] = useState([]);
 
-  // Load notifications from local storage when the component mounts
-  // useEffect(() => {
-  //   const savedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
-  //   setNotifications(savedNotifications);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (session) {
-  //     const ws = new WebSocket(`ws://localhost:8080?user=${encodeURIComponent(session.user.name)}`);
-  
-  //     ws.onopen = () => {
-  //       console.log("Connected to the WebSocket server");
-  //     };
-  
-  //      ws.onmessage = async (event) => {
-  //       try {
-  //         const message = JSON.parse(event.data);
-  //         console.log("Message from server:", message);
-  //         setNotifications((prev) => {
-  //           const updatedNotifications = [...prev, message];
-  //           console.log("Setting the notifications function: ", prev)
-  //           // Save notifications to local storage
-  //           localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
-  //           return updatedNotifications;
-  //         });
-  //       } catch (error) {
-  //         console.error("Error parsing message:", error);
-  //       }
-  //     };
-  //     if(ws.readyState===1){
-  //     ws.onclose = () => {
-  //       console.log("Disconnected from the WebSocket server");
-  //     };
-  //   }
-  
-  //     ws.onerror = (error) => {
-  //       console.error("WebSocket error:", error);
-  //     };
-  
-  //     return () => {
-  //       ws.close();
-  //     };
-  //   }
-  // }, [session]);
-
-  // useEffect(() => {
-  //   console.log("Notifications:", notifications);
-
-  // }, [notifications]);
-  // function handleNotification(index){
-  //   const updatedNotifications = [...notifications];
-  //   updatedNotifications.splice(index, 1);
-  //   setNotifications(updatedNotifications);
-  //   localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
-  //   console.log("index: ", index)
-  // }  
-
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -87,7 +30,7 @@ export default function NavComp() {
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                <Disclosure.Button className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
                   {open ? (
@@ -101,7 +44,7 @@ export default function NavComp() {
                       className="block h-6 w-6 group-data-[open]:block"
                     />
                   )}
-                </Disclosure.Button>
+                </DisclosureButton>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
@@ -159,20 +102,78 @@ export default function NavComp() {
                         </MenuItems>
                       </Transition>
                     </Menu>
+
                     {session && (
-                      <div className="hidden sm:ml-6 sm:block">
-                        <div className="flex space-x-4 text-white">
-                          <button onClick={() => signOut()}>Sign out</button>
-                          <p>{session.user.name}</p>
+                      <Menu as="div" className="relative">
+                        <div>
+                          <MenuButton className="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
+                            {session.user.name}
+                          </MenuButton>
                         </div>
-                      </div>
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <MenuItem>
+                              {({ active }) => (
+                                <a
+                                  href="/MyPosts"
+                                  className={classNames(
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
+                                  )}
+                                >
+                                  My Posts
+                                </a>
+                              )}
+                            </MenuItem>
+                            <MenuItem>
+                              {({ active }) => (
+                                <a
+                                  href="/AllPosts"
+                                  className={classNames(
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
+                                  )}
+                                >
+                                  All Posts
+                                </a>
+                              )}
+                            </MenuItem>
+                            <MenuItem>
+                              {({ active }) => (
+                                <a
+                                  href="/Community"
+                                  className={classNames(
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
+                                  )}
+                                >
+                                  Community
+                                </a>
+                              )}
+                            </MenuItem>
+                          </MenuItems>
+                        </Transition>
+                      </Menu>
                     )}
+
+                    {session && (
+                      <button onClick={() => signOut()} className="ml-4 text-white">
+                        Sign out
+                      </button>
+                    )}
+
                     {!session && (
-                      <div className="hidden sm:ml-6 sm:block">
-                        <div className="flex space-x-4 text-white" >
-                          <button onClick={() => signIn("google")}>Sign in</button>
-                        </div>
-                      </div>
+                      <button onClick={() => signIn("google")} className="text-white">
+                        Sign in
+                      </button>
                     )}
                   </div>
                 </div>
@@ -197,20 +198,35 @@ export default function NavComp() {
                       {notifications.length > 0 ? (
                         notifications.map((notification, index) => (
                           <MenuItem key={index}>
-                            <div className="block px-4 py-2 text-sm text-gray-700" onClick={() => handleNotification(index)}>
-                              <span>
-                                {notification}
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 64 64">
-                                  <path d="M 28 11 C 26.895 11 26 11.895 26 13 L 26 14 L 13 14 C 11.896 14 11 14.896 11 16 C 11 17.104 11.896 18 13 18 L 14.160156 18 L 16.701172 48.498047 C 16.957172 51.583047 19.585641 54 22.681641 54 L 41.318359 54 C 44.414359 54 47.041828 51.583047 47.298828 48.498047 L 49.839844 18 L 51 18 C 52.104 18 53 17.104 53 16 C 53 14.896 52.104 14 51 14 L 38 14 L 38 13 C 38 11.895 37.105 11 36 11 L 28 11 z M 18.173828 18 L 45.828125 18 L 43.3125 48.166016 C 43.2265 49.194016 42.352313 50 41.320312 50 L 22.681641 50 C 21.648641 50 20.7725 49.194016 20.6875 48.166016 L 18.173828 18 z"></path>
+                            {({ active }) => (
+                              <div
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                                onClick={() => handleNotification(index)}
+                              >
+                                <span>{notification}</span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  x="0px"
+                                  y="0px"
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 64 64"
+                                >
+                                  <path d="M 28 11 C 26.895 11 26 11.895 26 13 L 26 14 L 13 14 C 11.896 14 11 14.896 11 16 C 11 17.104 11.896 18 13 18 L 14.160156 18 L 16.701172 48.498047 C 16.884172 50.928047 18.812 53 21.248047 53 L 42.751953 53 C 45.187953 53 47.115828 50.928047 47.298828 48.498047 L 49.839844 18 L 51 18 C 52.104 18 53 17.104 53 16 C 53 14.896 52.104 14 51 14 L 38 14 L 38 13 C 38 11.895 37.105 11 36 11 L 28 11 z M 29 15 L 35 15 L 35 17 C 35 18.105 35.895 19 37 19 L 47.785156 19 L 45.304688 48.351562 C 45.249688 49.080562 44.749953 49.999023 42.751953 50 L 21.248047 50 C 19.250047 50 18.750312 49.080562 18.695312 48.351562 L 16.214844 19 L 27 19 C 28.105 19 29 18.105 29 17 L 29 15 z M 26 55 C 26 57.762 28.238 60 31 60 L 33 60 C 35.762 60 38 57.762 38 55 L 26 55 z"></path>
                                 </svg>
-                              </span>
-                            </div>
+                              </div>
+                            )}
                           </MenuItem>
                         ))
                       ) : (
-                        <div className="block px-4 py-2 text-sm text-gray-700">
-                          No new notifications
-                        </div>
+                        <MenuItem>
+                          <div className="block px-4 py-2 text-sm text-gray-700">
+                            No notifications
+                          </div>
+                        </MenuItem>
                       )}
                     </MenuItems>
                   </Transition>
@@ -226,18 +242,17 @@ export default function NavComp() {
                   key={item.name}
                   as="a"
                   href={item.href}
-                  aria-current={item.current ? "page" : undefined}
                   className={classNames(
                     item.current
                       ? "bg-gray-900 text-white"
                       : "text-gray-300 hover:bg-gray-700 hover:text-white",
                     "block rounded-md px-3 py-2 text-base font-medium"
                   )}
+                  aria-current={item.current ? "page" : undefined}
                 >
                   {item.name}
                 </DisclosureButton>
               ))}
-
               <Menu as="div" className="relative">
                 <div>
                   <MenuButton className="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
@@ -272,6 +287,77 @@ export default function NavComp() {
                   </MenuItems>
                 </Transition>
               </Menu>
+
+              {session && (
+                <Menu as="div" className="relative">
+                  <div>
+                    <MenuButton className="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
+                      {session.user.name}
+                    </MenuButton>
+                  </div>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <MenuItem>
+                        {({ active }) => (
+                          <a
+                            href="/MyPosts"
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
+                            My Posts
+                          </a>
+                        )}
+                      </MenuItem>
+                      <MenuItem>
+                        {({ active }) => (
+                          <a
+                            href="/AllPosts"
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
+                            All Posts
+                          </a>
+                        )}
+                      </MenuItem>
+                      <MenuItem>
+                        {({ active }) => (
+                          <a
+                            href="/Community"
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
+                            Community
+                          </a>
+                        )}
+                      </MenuItem>
+                    </MenuItems>
+                  </Transition>
+                </Menu>
+              )}
+              {session && (
+                <button onClick={() => signOut()} className="ml-4 text-white">
+                  Sign out
+                </button>
+              )}
+              {!session && (
+                <button onClick={() => signIn("google")} className="text-white">
+                  Sign in
+                </button>
+              )}
             </div>
           </DisclosurePanel>
         </>
