@@ -123,7 +123,7 @@ export default function NavComp() {
                           <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <MenuItem>
                               {({ active }) => (
-                                <a
+                                <Link
                                   href="/MyPosts"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
@@ -131,12 +131,12 @@ export default function NavComp() {
                                   )}
                                 >
                                   My Posts
-                                </a>
+                                </Link>
                               )}
                             </MenuItem>
                             <MenuItem>
                               {({ active }) => (
-                                <a
+                                <Link
                                   href="/AllPosts"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
@@ -144,12 +144,12 @@ export default function NavComp() {
                                   )}
                                 >
                                   All Posts
-                                </a>
+                                </Link>
                               )}
                             </MenuItem>
                             <MenuItem>
                               {({ active }) => (
-                                <a
+                                <Link
                                   href="/Community"
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
@@ -157,7 +157,7 @@ export default function NavComp() {
                                   )}
                                 >
                                   Community
-                                </a>
+                                </Link>
                               )}
                             </MenuItem>
                           </MenuItems>
@@ -273,7 +273,7 @@ export default function NavComp() {
                     {services.map((item) => (
                       <MenuItem key={item.name}>
                         {({ active }) => (
-                          <a
+                          <Link
                             href={item.href}
                             className={classNames(
                               active ? "bg-gray-100" : "",
@@ -281,7 +281,7 @@ export default function NavComp() {
                             )}
                           >
                             {item.name}
-                          </a>
+                          </Link>
                         )}
                       </MenuItem>
                     ))}
