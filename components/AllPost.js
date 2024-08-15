@@ -28,7 +28,7 @@ function AllPosts() {
     }, []);
 
     const truncateContent = (content) => {
-        const maxLength = 150; // Adjust this length as needed
+        const maxLength = 50; // Adjust this length as needed
         const plainText = content.replace(/<[^>]+>/g, ''); // Strip HTML tags
         if (plainText.length > maxLength) {
             return plainText.substring(0, maxLength) + '...';

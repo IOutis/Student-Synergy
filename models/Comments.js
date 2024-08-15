@@ -2,15 +2,16 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const PostDataSchema = new Schema({
+const CommentSchema = new Schema({
   content: {
     type: String,
     required: true,
   },
-  title: {
-    type: String,
+  postId: {
+    type: Schema.Types.ObjectId,
+    ref: 'PostData',
     required: true,
-    },
+  },
   user: {
     type: String,
     required: [true, 'User required'],
@@ -18,6 +19,15 @@ const PostDataSchema = new Schema({
   email: {
     type: String,
     required: [true, 'Email required'],
+  },
+  parentId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Comment',
+    default: null,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
   fileData: { // Field for storing binary data
     type: Buffer,
@@ -27,29 +37,8 @@ const PostDataSchema = new Schema({
     type: String,
     required: false, // Set according to your needs
   },
- 
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  likes: {
-    type: Number,
-    default:0,
-  },
-  keywords: [{ 
-    type: String,
-    required: true, // Ensures that posts have relevant keywords
-  }],
-  comments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Comment',
-  }],
-  likedBy:{
-    type:Array,
-    default:[]
-  }
 });
 
-const PostData = mongoose.models.PostData || mongoose.model('PostData', PostDataSchema);
+const Comment = mongoose.models.Comment || mongoose.model('Comment', CommentSchema);
 
-export default PostData;
+export default Comment;

@@ -10,7 +10,7 @@ router.get(async (req, res) => {
   
   try {
     // const user = req.query.user; // Pass the user email as a query parameter
-    console.log("ID = ",id);
+    // console.log("ID = ",id);
     const posts = await PostData.find({ _id: id });
     res.status(200).json(posts);
   } catch (error) {

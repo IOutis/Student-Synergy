@@ -14,7 +14,7 @@ router.post(async (req, res) => {
   await dbConnect();
 
   try {
-    const { content, user, title,keywords } = req.body;
+    const { content, user,email , title,keywords,} = req.body;
     console.log(title);
     if (!content || !user || !title || !keywords) {
       throw new Error("Content and user fields are required");
@@ -22,6 +22,7 @@ router.post(async (req, res) => {
 
     const newPostData = new PostData({
       user,
+      email,
       content,
       title,
       keywords,
