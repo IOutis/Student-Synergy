@@ -16,6 +16,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "contexts/ZenModeContext.js", "components/ZenModeToggle.js"],
   "exclude": ["node_modules"]
 }

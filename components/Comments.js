@@ -3,6 +3,7 @@ import { Box, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody,
 import dynamic from 'next/dynamic';
 
 const CustomEditor = dynamic(() => import('../components/Com_ckeditor'), { ssr: false });
+const DisplayPost = dynamic(() => import('../components/DisplayPost'), { ssr: false });
 
 const Comments = ({ postId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,7 +30,8 @@ const Comments = ({ postId }) => {
       .map(comment => (
         <Box key={comment._id} p={2} borderWidth="1px" borderRadius="md" mb={2}>
           <strong>{comment.user}</strong>
-          <div dangerouslySetInnerHTML={{ __html: comment.content }} />
+          {/* <div dangerouslySetInnerHTML={{ __html: comment.content }} /> */}
+          <DisplayPost post ={comment.content}></DisplayPost>
           <Button onClick={() => {
             setReplyingTo(comment._id);
             onOpen();
