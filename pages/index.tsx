@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      className={`flex  flex-col    ${inter.className}`}
     >
       <NavComp></NavComp>
       <h3 className="flex justify-center items-center">Still under development. Stay tuned</h3>

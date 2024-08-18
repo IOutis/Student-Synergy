@@ -26,7 +26,7 @@ const Dashboard = () => {
   }
 
   return (
-    <Box p="4">
+    <Box>
       <NavComp></NavComp>
       <Heading mb="4">Gamified Task Manager</Heading>
       <Profile user={session.user} />
