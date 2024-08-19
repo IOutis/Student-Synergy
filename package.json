@@ -24,6 +24,7 @@
     "ckbox": "^2.4.0",
     "ckeditor5": "^42.0.1",
     "convert-html-to-pdf": "^1.0.1",
+    "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "docx": "^8.5.0",
     "dotenv": "^16.4.5",

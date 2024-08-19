@@ -16,6 +16,9 @@ export default function Note() {
     const router = useRouter();
     const { id } = router.query;
     const [note, setNote] = useState(null);
+    const [value, setValue] = useState("");
+    const [error, setError] = useState("");
+    const [chatHistory,setChatHistory] = useState([]);
 
     useEffect(() => {
         if (id) {
@@ -93,6 +96,61 @@ export default function Note() {
         </div>);
       }
 
+     
+    
+       const surpriseOptions=[
+        'What is stoicism?',
+        'Why is Stoicism important?',
+        'How will Student Synergy help students?',
+       ]
+    
+    
+       const surprise = () =>{
+        const random = Math.floor(Math.random()*surpriseOptions.length)
+        setValue(surpriseOptions[random])
+       }
+    
+       const getResponse = async () => {
+        if (!value) {
+            setError("Error! Please ask a Question");
+            return;
+        }
+        
+        try {
+            const options = {
+                method: 'POST',
+                body: JSON.stringify({
+                    history: chatHistory,
+                    message: value,
+                    htmlContent: note.content,  // Include the HTML content here
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+            
+            const response = await fetch('/api/gemini/chatbot', options);
+            const data = await response.text();
+            
+            setChatHistory((oldChatHistory) => [
+                ...oldChatHistory,
+                {
+                    role: 'user',
+                    parts: [{ text: value }],
+                },
+                {
+                    role: 'model',
+                    parts: [{ text: data }],
+                },
+            ]);
+            
+            setValue('');
+        } catch (error) {
+            setError(`Error! Something went wrong! Please try later ${error}`);
+        }
+    };
+    
+    
     
 
     return (
@@ -109,6 +167,33 @@ export default function Note() {
                 <p><em>Works only in Desktop for some silly reason. Format error in the mobiles</em></p>
                 <p><strong>For mobiles, after downloading the document convert it into PDF on <u><a href="https://cloudconvert.com/" target="_blank">cloudconvert website</a></u> , then you can view the document</strong></p>
             </div>
+            <div className='app'>
+      
+      <p>
+        What do You want to know?
+        <button className='surprise' onClick={surprise} disabled={!chatHistory}>Surprise</button>
+      </p>
+      <div className='input-container'> 
+        <input type="text" value={value} placeholder='Say "Hi" to Galahad' onChange={(e)=>setValue(e.target.value)} />
+        {!error && <button onClick={getResponse}>Submit</button>}
+        {error && <button onClick={clear}>Clear</button>}
+        {error && <p>{error}</p>}
+        </div>
+        <div className='search-results'>
+        {chatHistory.map((chatItem, index) => (
+          <div key={index}>
+            <p className='answer'>
+              {chatItem.role}: {chatItem.parts.map((part, partIndex) => (
+                chatItem.role === 'model'
+                  ? <span key={partIndex} dangerouslySetInnerHTML={{ __html: part.text }} />
+                  : <span key={partIndex}>{part.text}</span>
+              ))}
+            </p>
+          </div>
+        ))}
+      </div>
+      </div>
+
         </div>
     );
 }
