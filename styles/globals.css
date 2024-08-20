@@ -362,6 +362,7 @@ flex-direction: column;
 
 .search-results{
   margin-top: 10px;
+  max-height:70%;
   overflow: scroll;
   overflow-y: auto;
 }
