@@ -53,7 +53,7 @@
 }
 
 .ck.ck-content {
-    height: 300px;
+    height: fit-content;
 }
 
 

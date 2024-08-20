@@ -64,7 +64,7 @@ function DisplayEditor({note}) {
                     }}
                     config={{
                         plugins: [
-                            Bold, Essentials, Italic, Mention, Paragraph, Undo, Strikethrough, Code, ImageUpload, Image, Link, Heading, FontFamily, Subscript, Superscript, BlockQuote, CodeBlock, Table, TableCaption, Text, Underline, Alignment, Highlight, ListView, List, TodoList, AutoImage, SimpleUploadAdapter,ImageResize,ImageStyle,ImageToolbar
+                            Bold, Essentials, Italic, Mention, Paragraph, Undo, Strikethrough, Code, ImageUpload, Image, Link, Heading, FontFamily, Subscript, Superscript, BlockQuote, CodeBlock, Table, TableCaption, Text, Underline, Alignment, Highlight, ListView, List, TodoList, AutoImage, SimpleUploadAdapter,ImageResize,ImageStyle,ImageToolbar,FontSize
                         ],
                         toolbar: {
                             items: [
@@ -72,7 +72,7 @@ function DisplayEditor({note}) {
                                 '|',
                                 'heading',
                                 '|',
-                                'fontfamily',
+                                'fontfamily','fontsize',
                                 '|',
                                 'bold', 'highlight', 'italic', 'strikethrough', 'subscript', 'superscript', 'code', 'underline', 'alignment',
                                 '|',
