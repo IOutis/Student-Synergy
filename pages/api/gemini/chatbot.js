@@ -21,7 +21,7 @@ router.post(async (req, res) => {
     let existingHistory = [
         {
             role: 'user',
-            parts: [{ text: 'Hello, I have a website called Student Synergy.' }],
+            parts: [{ text: 'Hello, I have a website called Student Synergy. Imagine your name is Galahad.' }],
         },
         {
             role: 'model',
@@ -29,7 +29,7 @@ router.post(async (req, res) => {
         },
         {
             role: 'user',
-            parts: [{ text: `I am going to share some html content analyse it.` }],
+            parts: [{ text: `I am going to share some html content analyse it. I am sharing the html content for every conversion even though sometimes its not needed. Because I am using gemini api and this is the simplest method to apply.` }],
         },
         {
             role: 'model',
@@ -37,7 +37,7 @@ router.post(async (req, res) => {
         },
         {
             role: 'user',
-            parts: [{ text: "Ok from this moment users will interact with you." }],
+            parts: [{ text: "Ok from this moment users will interact with you. Sometimes the users question may or maynot be regarding the html content. If the user specifically asks like quiz me or give summary or something like that then you can use the html content. " }],
         },
         {
             role: 'model',

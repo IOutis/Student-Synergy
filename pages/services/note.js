@@ -19,6 +19,7 @@ export default function Note() {
     const [value, setValue] = useState("");
     const [error, setError] = useState("");
     const [chatHistory,setChatHistory] = useState([]);
+    const [loadingState , setLoadingState] = useState(false);
 
     useEffect(() => {
         if (id) {
@@ -117,6 +118,7 @@ export default function Note() {
         }
         
         try {
+            setLoadingState(true);
             const options = {
                 method: 'POST',
                 body: JSON.stringify({
@@ -145,6 +147,7 @@ export default function Note() {
             ]);
             
             setValue('');
+            setLoadingState(false);
         } catch (error) {
             setError(`Error! Something went wrong! Please try later ${error}`);
         }
@@ -171,7 +174,7 @@ export default function Note() {
       
       <p>
         What do You want to know?
-        <button className='surprise' onClick={surprise} disabled={!chatHistory}>Surprise</button>
+        {/* <button className='surprise' onClick={surprise} disabled={!chatHistory}>Surprise</button> */}
       </p>
       <div className='input-container'> 
         <input type="text" value={value} placeholder='Say "Hi" to Galahad' onChange={(e)=>setValue(e.target.value)} />
@@ -180,6 +183,7 @@ export default function Note() {
         {error && <p>{error}</p>}
         </div>
         <div className='search-results'>
+            {loadingState && <p>Loading...</p>}
         {chatHistory.map((chatItem, index) => (
           <div key={index}>
             <p className='answer'>
