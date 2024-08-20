@@ -159,7 +159,7 @@ export default function Note() {
     return (
         <div>
             <NavComp></NavComp>
-            <div style={{ height: "60vh", alignItems:"center",  marginTop:"2vh",paddingBottom:"2vh", display:"flex", flexDirection:"column", alignContent:"center", alignItems:"center"
+            <div style={{ alignItems:"center",  marginTop:"2vh",paddingBottom:"2vh", display:"flex", flexDirection:"column", alignContent:"center", alignItems:"center"
             }}>
                 <h1 style={{ textAlign: "center", fontWeight:"bold" }} aria-readonly>{note.title}</h1>
                 <DisplayEditor note={note} />
@@ -173,7 +173,7 @@ export default function Note() {
             <div className='app'>
       
       <p>
-        What do You want to know?
+        Chat with your note
         {/* <button className='surprise' onClick={surprise} disabled={!chatHistory}>Surprise</button> */}
       </p>
       <div className='input-container'> 
