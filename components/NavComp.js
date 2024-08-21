@@ -165,6 +165,7 @@ export default function NavComp() {
                                 >
                                   Leaderboard
                                 </Link>
+                                
                               )}
                             </MenuItem>
                           </MenuItems>
