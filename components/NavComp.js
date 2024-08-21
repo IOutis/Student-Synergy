@@ -150,7 +150,20 @@ export default function NavComp() {
                                     "block px-4 py-2 text-sm text-gray-700"
                                   )}
                                 >
-                                  Community
+                                  Post
+                                </Link>
+                              )}
+                            </MenuItem>
+                            <MenuItem>
+                              {({ active }) => (
+                                <Link
+                                  href="/LeaderBoard"
+                                  className={classNames(
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
+                                  )}
+                                >
+                                  Leaderboard
                                 </Link>
                               )}
                             </MenuItem>
@@ -335,7 +348,20 @@ export default function NavComp() {
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
-                            Community
+                            Post
+                          </Link>
+                        )}
+                      </MenuItem>
+                      <MenuItem>
+                        {({ active }) => (
+                          <Link
+                            href="/LeaderBoard"
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
+                          >
+                            LeaderBoard
                           </Link>
                         )}
                       </MenuItem>
