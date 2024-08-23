@@ -8,7 +8,9 @@ import dbConnect from '../../lib/dbconnect';
 import { createRouter } from 'next-connect';
 import Nextauth from "./auth/[...nextauth]";
 import User from '../../models/User'
-const upload = multer({ dest: 'uploads/' }); // Store files temporarily in the 'uploads' folder
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+ // Store files temporarily in the 'uploads' folder
 
 const router = createRouter();
 
