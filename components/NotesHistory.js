@@ -7,12 +7,14 @@ import NavComp from '../components/NavComp'
 export default function NotesHistory() {
     const { data: session } = useSession();
     const router = useRouter();
+    const [loadingState,setLoadingState]= useState(false);
 
     const [notes, setNotes] = useState([]);
 
     useEffect(() => {
         if (session) {
             const fetchNotes = async () => {
+                setLoadingState(true);
                 try {
                     const res = await fetch(`/api/get_notes?user=${session.user.email}`);
                     if (!res.ok) {
@@ -20,6 +22,7 @@ export default function NotesHistory() {
                     }
                     const data = await res.json();
                     setNotes(data);
+                    setLoadingState(false);
                 } catch (error) {
                     console.log(error);
                 }
@@ -47,6 +50,7 @@ export default function NotesHistory() {
     return (
         <div className="overflow-y-scroll" style={{ maxHeight: "87vh" }}>
             <h3 className='mt-3 pb-3'>Notes History</h3>
+            {loadingState && <p>Loading...</p>}
             {notes.length ? (
                 <ul style={{ paddingBottom: "3px" }}>
                     {notes.map(note => (
