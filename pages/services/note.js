@@ -20,6 +20,8 @@ export default function Note() {
     const [error, setError] = useState("");
     const [chatHistory,setChatHistory] = useState([]);
     const [loadingState , setLoadingState] = useState(false);
+    const [loadingDataState , setLoadingDataState] = useState(false);
+    const [files,setFiles] = useState([]);
 
     useEffect(() => {
         if (id) {
@@ -29,12 +31,21 @@ export default function Note() {
 
     const fetchNoteDetails = async (id) => {
         try {
+            setLoadingDataState(true);
             const res = await fetch(`/api/get_note?id=${id}`);
             if (!res.ok) {
                 throw new Error('Network response was not ok');
             }
             const data = await res.json();
             setNote(data);
+            const file_res = await fetch(`/api/get_file?id=${id}`);
+            const file_data = await file_res.json();
+            setFiles(file_data.files);
+            
+            setLoadingDataState(false)
+            // console.log("FILES =",files)
+            // console.log("FILES LENGTH = ",files.length)
+
         } catch (error) {
             console.error("Error fetching note details:", error);
         }
@@ -93,7 +104,7 @@ export default function Note() {
     if (!session) {
         return (<div> <NavComp></NavComp>
         <div style={{ display:"flex", justifyContent:"center", marginTop:"6vh"}}>
-        <p>Please sign in to view your tasks.</p></div>
+        <p>Please sign in to view your notes.</p></div>
         </div>);
       }
 
@@ -161,14 +172,30 @@ export default function Note() {
             <NavComp></NavComp>
             <div style={{ alignItems:"center",  marginTop:"2vh",paddingBottom:"2vh", display:"flex", flexDirection:"column", alignContent:"center", alignItems:"center"
             }}>
+                {/* <LoadingComp></LoadingComp> */}
                 <h1 style={{ textAlign: "center", fontWeight:"bold" }} aria-readonly>{note.title}</h1>
+                {files.length > 0 && (
+                    <div>
+                        <h2 style={{ textAlign: "center", fontWeight: "bold" }}>Attached Files:</h2>
+                        <ul>
+                            {files.map((file, index) => (
+                                <li key={index}>
+                                    <a href={file.url} download>{file.filename}</a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
                 <DisplayEditor note={note} />
                 <button onClick={() => handleDelete(note._id)} type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
                 {/* <button onClick={() => handleDelete(note._id)}>Delete</button> */}
                 {/* <button onClick={() => { handleDownload(note.content) }}>Download DOCX</button> */}
+                <p>Download the text saved</p>
                 <button onClick={() => { handleDownload(note.content) }} type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Download DOCX</button>
                 <p><em>Works only in Desktop for some silly reason. Format error in the mobiles</em></p>
                 <p><strong>For mobiles, after downloading the document convert it into PDF on <u><a href="https://cloudconvert.com/" target="_blank">cloudconvert website</a></u> , then you can view the document</strong></p>
+                <br />
+                
             </div>
             <div className='app'>
       

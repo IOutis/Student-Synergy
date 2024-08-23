@@ -23,6 +23,10 @@ const EditorDataSchema = new Schema({
     type: String,
     required: false, // Set according to your needs
   },
+  files: [{ // Array to store references to uploaded files
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'File',
+  }],
  
   createdAt: {
     type: Date,

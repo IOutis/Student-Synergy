@@ -10,6 +10,8 @@ function CustomEditor() {
     const editorRef = useRef(null);
     const { data: session } = useSession();
     const [template, setTemplate] = useState('');
+    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([null]);
 
     function saveData(data) {
         return new Promise(resolve => {
@@ -44,6 +46,25 @@ function CustomEditor() {
     
                 const result = await res.json();
                 // console.log(result);
+                const noteId = result._id
+
+                for (let i = 0; i < files.length; i++) {
+                    if (files[i]) {
+                        const fileFormData = new FormData();
+                        fileFormData.append('file', files[i]);
+                        fileFormData.append('noteId', noteId);
+
+                        const fileRes = await fetch('/api/upload_file', {
+                            method: 'POST',
+                            body: fileFormData,
+                        });
+
+                        if (!fileRes.ok) {
+                            throw new Error(`File upload error: ${fileRes.statusText}`);
+                        }
+                    }
+                }
+
     
                 window.location.reload(); // Consider updating UI state instead
             } catch (error) {
@@ -64,6 +85,15 @@ function CustomEditor() {
             setTemplate(note);
             }
     }
+    const handleFileChange = (index, e) => {
+        const newFiles = [...files];
+        newFiles[index] = e.target.files[0]; // Update the specific file input
+        setFiles(newFiles);
+    };
+
+    const addFileInput = () => {
+        setFiles([...files, null]); // Add a new file input (null placeholder)
+    };
 
     return (
         <div className='mt-3'>
@@ -140,6 +170,26 @@ function CustomEditor() {
                     }}
                 />
                 {/* <button type="submit">Save</button> */}
+                {files.map((file, index) => (
+                    <div key={index} style={{ marginBottom: '10px' }}>
+                        <input 
+                            type="file" 
+                            onChange={(e) => handleFileChange(index, e)} 
+                            style={{ display: 'block', marginBottom: '5px' }} 
+                        />
+                    </div>
+                ))}
+
+                {/* Button to add more file inputs */}
+                <button 
+                    type="button" 
+                    onClick={addFileInput} 
+                    style={{ marginBottom: '10px' }}
+                    className="mt-3 text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800"
+                >
+                    Add another file
+                </button>
+
                 <button type="submit" class="mt-[3vh] focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Save</button>
             </form>
         </div>
