@@ -3,6 +3,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { ClassicEditor, Bold, Essentials, Italic, Mention, Paragraph, Undo, Strikethrough, Code, ImageUpload, Image, Link, Heading, FontFamily, Subscript, Superscript, BlockQuote, CodeBlock, Table, TableCaption, Text, Underline, Alignment, FontColor, Highlight, FontSize, Font, OrderedList, BulletedList, Indent, Outdent, List, TodoList, AutoImage, Autosave, ListView, SimpleUploadAdapter, ImageResize ,ImageStyle, ImageToolbar,FileUploader} from 'ckeditor5';
 import 'ckeditor5/ckeditor5.css';
 import { useSession } from 'next-auth/react';
+import LoadingComp from '../components/LoadingComp'
 
 function CustomEditor() {
     const [editorData, setEditorData] = useState('');
@@ -12,6 +13,7 @@ function CustomEditor() {
     const [template, setTemplate] = useState('');
     const [file, setFile] = useState(null);
     const [files, setFiles] = useState([null]);
+    const [loadingState,setLoadingState] = useState(false);
 
     function saveData(data) {
         return new Promise(resolve => {
@@ -35,6 +37,7 @@ function CustomEditor() {
             formData.append('user', session.user.email); 
             
             try {
+                setLoadingState(true);
                 const res = await fetch('/api/editor', {
                     method: 'POST',
                     body: formData,
@@ -65,7 +68,7 @@ function CustomEditor() {
                     }
                 }
 
-    
+                setLoadingState(false);
                 window.location.reload(); // Consider updating UI state instead
             } catch (error) {
                 alert("Error submitting editor content:", error.message);
@@ -97,6 +100,7 @@ function CustomEditor() {
 
     return (
         <div className='mt-3'>
+            {loadingState && <LoadingComp></LoadingComp>}
             {/* <button onClick={()=>{handleTemplate('journal')}}>Journal Template</button> */}
             <button onClick={()=>{handleTemplate('journal')}} class="mr-3 group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-neutral-950 px-6 font-medium text-neutral-200 transition hover:scale-110"><span>Journal Template</span><div class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]"><div class="relative h-full w-8 bg-white/20"></div></div></button>
             <button onClick={()=>{handleTemplate('notes')}} class="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-neutral-950 px-6 font-medium text-neutral-200 transition hover:scale-110"><span>Notes Template</span><div class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]"><div class="relative h-full w-8 bg-white/20"></div></div></button>
