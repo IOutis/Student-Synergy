@@ -19,7 +19,7 @@ router.use(upload.single('file')); // Handle single file upload
 const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_ID,
     process.env.GOOGLE_SECRET,
-    "http://localhost:3000/api/auth/callback/google", // Use this for local development
+    process.env.GOOGLE_REDIRECT_URI, // Use this for local development
 );
 
 
