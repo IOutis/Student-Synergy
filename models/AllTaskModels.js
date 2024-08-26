@@ -37,6 +37,7 @@ const NewTaskSchema = new mongoose.Schema({
 // User Schema
 const UserSchema = new mongoose.Schema({
   email: String,
+  name: String,
   tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewTask' }],
   dailyTasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewDailyTask' }],
   habits: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NewHabit' }],
@@ -44,8 +45,26 @@ const UserSchema = new mongoose.Schema({
   level: { type: Number, default: 1 },
   experience: { type: Number, default: 0 },
   skills: [{ type: String }],
-  coins: { type: Number, default: 0 }
+  coins: { type: Number, default: 0 },
+  communityIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Community' }]
 }, { collection: 'Users' });
+
+
+
+const CommunitySchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  description: String,
+  adminEmail: { type: String, required: true },  // Renamed for clarity
+  members: [{ type: String }],  // Assuming these are emails
+  joinRequests: [{ type: String }],  // Assuming these are emails
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PostData'  // Referencing posts from PostData model
+  }]
+}, { collection: 'Communities' });
+
+const Community = mongoose.models.Community || mongoose.model('Community', CommunitySchema);
+
 
 
 const LevelSchema = new mongoose.Schema({
@@ -63,4 +82,4 @@ const DailyTask = mongoose.models.NewDailyTask || mongoose.model('NewDailyTask',
 const NewTask = mongoose.models.NewTask || mongoose.model('NewTask', NewTaskSchema);
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
-export { Habit, DailyTask, User, NewTask,Level };
+export { Habit, DailyTask, User, NewTask,Level ,Community};

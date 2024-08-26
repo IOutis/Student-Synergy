@@ -61,7 +61,7 @@ export default function NotesHistory() {
                         >
                             <li
                                 style={{ paddingLeft: "5vw", marginTop: "6px", paddingTop: "3px" }}
-                                onClick={() => handleSubmit(note._id)}
+                                onClick={() => handleSubmit(note._id)} //remember to move this to div
                             >
                                 <p style={{ marginTop: "6px" }}>{note.title}</p>
                             </li>

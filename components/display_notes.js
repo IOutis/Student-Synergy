@@ -6,13 +6,14 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 
-function DisplayEditor({note}) {
+function DisplayEditor({note,access}) {
     const router = useRouter();
     const [editorData, setEditorData] = useState(note.content);
     const editorRef = useRef(null);
     const { data: session } = useSession();
     const [file, setFile] = useState(null);
     const [files, setFiles] = useState([null]);
+    // console.log("Access in DisplayEditor:", access);
 
     function saveData(data) {
         return new Promise(resolve => {
@@ -85,6 +86,7 @@ function DisplayEditor({note}) {
 
     return (
         <div>
+            {/* <p>Access: {access ? "Granted" : "Denied"}</p> */}
             <form onSubmit={handleSubmit} style={{width:"50vw", display:"flex", flexDirection:"column", justifyContent:"center", alignContent:"center", alignItems:"center"}}>
                 <CKEditor
                     editor={ClassicEditor}
@@ -92,6 +94,7 @@ function DisplayEditor({note}) {
                     onReady={editor => {
                         editorRef.current = editor;
                     }}
+                    disabled={!access}
                     config={{
                         plugins: [
                             Bold, Essentials, Italic, Mention, Paragraph, Undo, Strikethrough, Code, ImageUpload, Image, Link, Heading, FontFamily, Subscript, Superscript, BlockQuote, CodeBlock, Table, TableCaption, Text, Underline, Alignment, Highlight, ListView, List, TodoList, AutoImage, SimpleUploadAdapter,ImageResize,ImageStyle,ImageToolbar,FontSize
@@ -147,6 +150,7 @@ function DisplayEditor({note}) {
                     }}
                 />
                 {/* <button type="submit">Update</button> */}
+                {access&&<div>
                 {files.map((file, index) => (
                     <div key={index} style={{ marginBottom: '10px' }}>
                         <input 
@@ -168,6 +172,7 @@ function DisplayEditor({note}) {
                 </button>
 
                 <button type="submit" class="mt-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Update</button>
+            </div>}
             </form>
         </div>
     );

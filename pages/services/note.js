@@ -19,6 +19,7 @@ export default function Note() {
     const [value, setValue] = useState("");
     const [error, setError] = useState("");
     const [chatHistory,setChatHistory] = useState([]);
+    const [access,setAccess] = useState(false);
     const [loadingState , setLoadingState] = useState(false);
     const [loadingDataState , setLoadingDataState] = useState(false);
     const [files,setFiles] = useState([]);
@@ -27,7 +28,8 @@ export default function Note() {
         if (id) {
             fetchNoteDetails(id);
         }
-    }, [id]);
+    }, [id,session,status]);
+    
 
     const fetchNoteDetails = async (id) => {
         try {
@@ -38,19 +40,24 @@ export default function Note() {
             }
             const data = await res.json();
             setNote(data);
-            const file_res = await fetch(`/api/get_file?id=${id}`);
-            const file_data = await file_res.json();
-            setFiles(file_data.files);
-            
-            setLoadingDataState(false)
-            // console.log("FILES =",files)
-            // console.log("FILES LENGTH = ",files.length)
 
+            const fileRes = await fetch(`/api/get_file?id=${id}`);
+            const fileData = await fileRes.json();
+            setFiles(fileData.files);
+            
+            // Access check
+            if (data.user === session.user.email) {
+                setAccess(true);
+            } else {
+                setAccess(false);
+            }
+            
+            setLoadingDataState(false);
         } catch (error) {
             console.error("Error fetching note details:", error);
         }
     };
-
+    
     const convertImagesToBase64 = async (htmlContent) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
@@ -100,6 +107,9 @@ export default function Note() {
 
     if (!note) {
         return <LoadingComp></LoadingComp>;
+    }
+    if (status === 'loading') {
+        return <LoadingComp />;
     }
     if (!session) {
         return (<div> <NavComp></NavComp>
@@ -186,9 +196,10 @@ export default function Note() {
                         </ul>
                     </div>
                 )}
-                <DisplayEditor note={note} />
-                <button onClick={() => handleDelete(note._id)} type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
-                {/* <button onClick={() => handleDelete(note._id)}>Delete</button> */}
+
+                <DisplayEditor note={note} access={access} />
+{        access&&        <button onClick={() => handleDelete(note._id)} type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
+}                {/* <button onClick={() => handleDelete(note._id)}>Delete</button> */}
                 {/* <button onClick={() => { handleDownload(note.content) }}>Download DOCX</button> */}
                 <p>Download the text saved</p>
                 <button onClick={() => { handleDownload(note.content) }} type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Download DOCX</button>

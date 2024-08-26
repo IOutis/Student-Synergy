@@ -47,7 +47,11 @@ const PostDataSchema = new Schema({
   likedBy:{
     type:Array,
     default:[]
-  }
+  },
+  private: {
+    type: Boolean,
+    default: false, // Set to true for private community posts
+  },
 });
 
 const PostData = mongoose.models.PostData || mongoose.model('PostData', PostDataSchema);
