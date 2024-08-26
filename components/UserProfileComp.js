@@ -43,7 +43,7 @@ const UserProfile = ({email}) => {
 
   return (
     <div>
-      <h1>{user?.name}'s Profile</h1>
+      <h1>{user?.name}s Profile</h1>
       <p>Level: {user?.level}</p>
       <p>Experience: {user?.experience}</p>
       <p>Coins: {user?.coins}</p>
@@ -85,7 +85,7 @@ const UserProfile = ({email}) => {
           <li key={result._id}>
             <a href={`/user/${result._id}`}>{result.email}</a>
             <button onClick={() => window.location.href = `/user/${result._id}/join-community`}>
-              Join User's Community
+              Join Users Community
             </button>
           </li>
         ))}
