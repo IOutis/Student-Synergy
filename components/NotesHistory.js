@@ -55,13 +55,14 @@ export default function NotesHistory() {
                 <ul style={{ paddingBottom: "3px" }}>
                     {notes.map(note => (
                         <div
+                        onClick={() => handleSubmit(note._id)}
                             key={note._id} // Add key prop here
                             className='h-[6vh] bg-gray-200 hover:bg-gray-900 hover:scale-110 hover:text-white hover:cursor-pointer'
                             style={{ marginBottom: "3px", marginTop: "6px" }}
                         >
                             <li
                                 style={{ paddingLeft: "5vw", marginTop: "6px", paddingTop: "3px" }}
-                                onClick={() => handleSubmit(note._id)} //remember to move this to div
+                                 //remember to move this to div
                             >
                                 <p style={{ marginTop: "6px" }}>{note.title}</p>
                             </li>
