@@ -111,7 +111,7 @@ const UserProfile = ({ email }) => {
           <li key={result._id}>
             <a href={`/user/${result.email}`}>{result.name}</a>
             <button onClick={() => window.location.href = `/user/${result._id}/join-community`}>
-              Join User's Community
+              Join Users Community
             </button>
           </li>
         ))}
