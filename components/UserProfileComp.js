@@ -48,7 +48,7 @@ const UserProfile = ({ email }) => {
 
   return (
     <div>
-      <h1>{user?.name}'s Profile</h1>
+      <h1>{user?.name}s Profile</h1>
           <p>Level: {user?.level}</p>
           <p>Experience: {user?.experience}</p>
           <p>Coins: {user?.coins}</p>
