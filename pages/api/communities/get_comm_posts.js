@@ -6,9 +6,12 @@ const router = createRouter();
 
 router.get(async (req, res) => {
   await dbConnect();
-  
+  const { ids } = req.query; // Expecting ids as a comma-separated string
+
   try {
-    const posts = await PostData.find({isPrivate:false}).sort({ createdAt: -1 }); // Sort by newest first
+    const idsArray = ids.split(','); // Convert the string to an array
+    const posts = await PostData.find({ _id: { $in: idsArray } });
+    // console.log(posts)
     res.status(200).json(posts);
   } catch (error) {
     console.error("Error fetching posts:", error.message);

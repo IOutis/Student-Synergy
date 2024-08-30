@@ -9,7 +9,8 @@ const CommunitySchema = new mongoose.Schema({
     posts: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'PostData'  // Referencing posts from PostData model
-    }]
+    }],
+    approvalType: { type: String, enum: ['automatic', 'manual'], required: true },
 }, { collection: 'Communities' });
 
 const Community = mongoose.models.Community || mongoose.model('Community', CommunitySchema);

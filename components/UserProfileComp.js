@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
-const UserProfile = ({email}) => {
+const UserProfile = ({ email }) => {
+  const { data: session } = useSession();
   const [user, setUser] = useState(null);
   const [communitiesCreated, setCommunitiesCreated] = useState([]);
   const [communitiesJoined, setCommunitiesJoined] = useState([]);
@@ -13,7 +15,6 @@ const UserProfile = ({email}) => {
       try {
         const response = await axios.get(`/api/user_data?email=${email}`); // Fetch the user profile
         setUser(response.data.user);
-        console.log(response);
         setCommunitiesCreated(response.data.communitiesCreated);
         setCommunitiesJoined(response.data.communitiesJoined);
       } catch (error) {
@@ -21,7 +22,7 @@ const UserProfile = ({email}) => {
       }
     };
     fetchUserData();
-  }, []);
+  }, [email]);
 
   const handleSearch = async (searchTerm) => {
     try {
@@ -29,63 +30,88 @@ const UserProfile = ({email}) => {
       setSearchResults(response.data);
     } catch (error) {
       console.error('Error searching users', error);
+      setSearchResults([]);
     }
   };
 
-  const handleApproveRequest = async (communityId, email) => {
+  const handleJoinCommunity = async (communityId) => {
     try {
-      await axios.post(`/api/communities/${communityId}/approve`, { email });
-      // Update the community or refetch data
+      await axios.post(`/api/communities/join`, { communityId, userEmail: session.user.email });
+      // Optionally, update UI or refetch user data to reflect the joined community
+      alert('Successfully joined the community!');
     } catch (error) {
-      console.error('Error approving request', error);
+      console.error('Error joining community', error);
     }
   };
+
+  const isCurrentUser = session?.user?.email === email;
 
   return (
     <div>
-      <h1>{user?.name}s Profile</h1>
-      <p>Level: {user?.level}</p>
-      <p>Experience: {user?.experience}</p>
-      <p>Coins: {user?.coins}</p>
+      <h1>{user?.name}'s Profile</h1>
+          <p>Level: {user?.level}</p>
+          <p>Experience: {user?.experience}</p>
+          <p>Coins: {user?.coins}</p>
 
-      <h2>Communities Created</h2>
-      <ul>
-        {communitiesCreated.map((community) => (
-          <li key={community._id}>
-            <a href={`/community/${community._id}`}>{community.name}</a>
-            <br />
-            <a href={`/community/${community._id}/requests`}>View Join Requests</a>
-          </li>
-        ))}
-      </ul>
+      {isCurrentUser ? (
+        <>
+          <h2>Communities Created</h2>
+          <ul>
+            {communitiesCreated.map((community) => (
+              <li key={community._id}>
+                <a href={`/community/${community._id}`}>{community.name}</a>
+                <br />
+                <a href={`/community/${community._id}/requests`}>View Join Requests</a>
+              </li>
+            ))}
+          </ul>
 
+          <h2>Communities Joined</h2>
+          <ul>
+            {communitiesJoined.map((community) => (
+              <li key={community._id}>
+                <a href={`/community/${community._id}`}>{community.name}</a>
+              </li>
+            ))}
+          </ul>
+
+          <h2>Create a New Community</h2>
+          <button onClick={() => window.location.href = '/create-community'}>
+            Create Community
+          </button>
+        </>
+      ) : (
+        <div>
+          <h2>{user?.name}'s Communities</h2>
+          <ul>
+            {communitiesCreated.map((community) => (
+              <li key={community._id}>
+                <a href={`/community/${community._id}`}>{community.name}</a>
+                <button onClick={() => handleJoinCommunity(community._id)}>
+                  Join Community
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <h2>Communities Joined</h2>
-      <ul>
-        {communitiesJoined.map((community) => (
-          <li key={community._id}>
-            <a href={`/community/${community._id}`}>{community.name}</a>
-          </li>
-        ))}
-      </ul>
-
-      <h2>Create a New Community</h2>
-      <button onClick={() => window.location.href = '/create-community'}>
-        Create Community
-      </button>
-
-      <h2>Join a Community</h2>
-      <button onClick={() => window.location.href = '/join-community'}>
-        Join Community
-      </button>
+          <ul>
+            {communitiesJoined.map((community) => (
+              <li key={community._id}>
+                <a href={`/community/${community._id}`}>{community.name}</a>
+              </li>
+            ))}
+          </ul>
 
       <h2>Search Users</h2>
       <input type="text" placeholder="Search by name or email" onChange={(e) => handleSearch(e.target.value)} />
       <ul>
         {searchResults.map((result) => (
           <li key={result._id}>
-            <a href={`/user/${result._id}`}>{result.email}</a>
+            <a href={`/user/${result.email}`}>{result.name}</a>
             <button onClick={() => window.location.href = `/user/${result._id}/join-community`}>
-              Join Users Community
+              Join User's Community
             </button>
           </li>
         ))}

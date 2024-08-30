@@ -48,7 +48,7 @@ const PostDataSchema = new Schema({
     type:Array,
     default:[]
   },
-  private: {
+  isPrivate: {
     type: Boolean,
     default: false, // Set to true for private community posts
   },

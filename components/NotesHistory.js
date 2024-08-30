@@ -62,7 +62,6 @@ export default function NotesHistory() {
                         >
                             <li
                                 style={{ paddingLeft: "5vw", marginTop: "6px", paddingTop: "3px" }}
-                                 //remember to move this to div
                             >
                                 <p style={{ marginTop: "6px" }}>{note.title}</p>
                             </li>
