@@ -82,7 +82,7 @@ const UserProfile = ({ email }) => {
         </>
       ) : (
         <div>
-          <h2>{user?.name}'s Communities</h2>
+          <h2>{user?.name}s Communities</h2>
           <ul>
             {communitiesCreated.map((community) => (
               <li key={community._id}>
