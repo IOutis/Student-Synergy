@@ -27,6 +27,11 @@ const PostDataSchema = new Schema({
     type: String,
     required: false, // Set according to your needs
   },
+  fileIds: [{ // New field to reference uploaded file documents
+    type: Schema.Types.ObjectId,
+    ref: 'File', // References the File model
+    required: false, // Set to true if every post should have files
+  }],
  
   createdAt: {
     type: Date,

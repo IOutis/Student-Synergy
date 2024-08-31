@@ -44,6 +44,7 @@ export default function Note() {
             const fileRes = await fetch(`/api/get_file?id=${id}`);
             const fileData = await fileRes.json();
             setFiles(fileData.files);
+            console.log("Files :", typeof(files))
             
             // Access check
             if (data.user === session.user.email) {

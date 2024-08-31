@@ -57,10 +57,29 @@ function CustomEditor({ private: isPrivate, id }) {
                 }
     
                 const result = await res.json();
+                console.log("Result : ",result)
+                const postId = result._id
+                for (let i = 0; i < files.length; i++) {
+                    if (files[i]) {
+                        const fileFormData = new FormData();
+                        fileFormData.append('file', files[i]);
+                        fileFormData.append('postId', postId);
+
+                        const fileRes = await fetch('/api/comm_post/upload_file', {
+                            method: 'POST',
+                            body: fileFormData,
+                        });
+
+                        if (!fileRes.ok) {
+                            throw new Error(`File upload error: ${fileRes.statusText}`);
+                        }
+                    }
+                } 
                 window.location.reload(); // Consider updating UI state instead
             } catch (error) {
-                alert("Error submitting editor content:", error.message);
+                alert("Error submitting editor content: " + error.message);
             }
+            
         }
     };
 

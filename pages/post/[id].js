@@ -5,6 +5,7 @@ import LoadingComp from '../../components/LoadingComp';
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
 import Comments from '../../components/Comments';
+
 const DisplayPost = dynamic(() => import('../../components/DisplayPost'), { ssr: false });
 
 const Post = () => {
@@ -12,42 +13,43 @@ const Post = () => {
     const { id } = router.query;
     const [post, setPost] = useState(null);
     const [likes, setLikes] = useState(0);
+    const [files, setFiles] = useState([]);
     const { data: session } = useSession();
     const [likeFlag, setLikeFlag] = useState(false);
-
-    const fetchPost = async () => {
-        try {
-            const res = await fetch(`/api/comm_post/get_post_by_id?id=${id}`);
-            const data = await res.json();
-            console.log("Fetched Data: ", data);
-            if (data && data.length > 0) {
-                setPost(data[0]);  // Accessing the first object in the array
-                setLikes(data[0].likes);  // Set initial likes
-                setLikeFlag(data[0].likedBy.includes(session.user.name));
-                console.log(likeFlag);
-            } else {
-                console.error('Post not found');
-            }
-        } catch (error) {
-            console.error('Error fetching post:', error.message);
-        }
-    };
+    // if(!session){
+    //     return <><NavComp></NavComp> <p>Login</p></>
+    // }
 
     useEffect(() => {
         if (id) {
+            const fetchPost = async () => {
+                try {
+                    const res = await fetch(`/api/comm_post/get_post_by_id?id=${id}`);
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        setPost(data[0]);  // Accessing the first object in the array
+                        setLikes(data[0].likes);  // Set initial likes
+                        setLikeFlag(data[0].likedBy.includes(session?.user?.name || ''));
+                        
+                        // Fetch files if there are any
+                        if (data[0].fileIds && data[0].fileIds.length > 0) {
+                            const filesRes = await fetch(`/api/comm_post/get_file?id=${data[0]._id}`);
+                            const filesData = await filesRes.json();
+                            setFiles(filesData.files);
+                            const filesArray = Object.values(files);
+                            console.log("Files",filesArray)
+                        }
+                    } else {
+                        console.error('Post not found');
+                    }
+                } catch (error) {
+                    console.error('Error fetching post:', error.message);
+                }
+            };
+            
             fetchPost();
         }
-    }, [id]);
-
-    useEffect(() => {
-        if (post) {
-            console.log("Post: ", post.title);
-        }
-    }, [post]);
-
-    if (!post) {
-        return <LoadingComp />;
-    }
+    }, [id, session?.user?.name]); // Adding session.user.name as a dependency
 
     const handleLiked = async (postId) => {
         try {
@@ -58,14 +60,25 @@ const Post = () => {
                 throw new Error('Failed to update likes');
             }
             const data = await res.json();
-            console.log(data.likedBy.includes(session.user.name));
             setLikes(data.likes); // Update the likes state with the new count
-            console.log("Handle liked after : ", likeFlag);
             await fetchPost(); // Reload the post data to get the latest state
         } catch (error) {
             console.error('Error updating likes:', error.message);
         }
     };
+
+    if (!session) {
+        return (
+            <>
+                <NavComp />
+                <p>Login</p>
+            </>
+        );
+    }
+
+    if (!post) {
+        return <LoadingComp />;
+    }
 
     return (
         <div>
@@ -73,7 +86,7 @@ const Post = () => {
             <div className='flex justify-center flex-col items-center'>
                 <h1>{post.title}</h1>
                 <p><strong>Posted by:</strong> {post.user}</p>
-                <DisplayPost post={post.content}></DisplayPost>
+                <DisplayPost post={post.content} />
                 {session && (
                     <div className="heart-container" title="Like" onClick={() => handleLiked(post._id)}>
                         <div className="svg-container">
@@ -93,7 +106,21 @@ const Post = () => {
                     </div>
                 )}
                 <p>Number of likes: {likes}</p>
-                <Comments postId={post._id} ></Comments>
+           
+                {files.length > 0 && (
+                    <div>
+                        <h2 style={{ textAlign: "center", fontWeight: "bold" }}>Attached Files:</h2>
+                        <ul>
+                            {files.map((file, index) => (
+                                <li key={index}>
+                                    <a href={file.url} download>{file.filename}</a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+             
+                <Comments postId={post._id} />
             </div>
         </div>
     );
