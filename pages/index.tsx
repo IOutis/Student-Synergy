@@ -14,7 +14,7 @@ export default function Home() {
       <NavComp></NavComp>
       <h3 className="flex justify-center items-center">Still under development. Stay tuned</h3>
       <div style={{display:"flex", flexDirection:"column", width:"30%", marginLeft:"auto", marginRight:"auto", marginTop:"5%", }}>
-      <h3>Student Synergy isn't some magic fix or shortcut—it's a tool meant to be used wisely. Just like pencils were made for writing, but even someone like John Wick, known as Baba Yaga, turned one into a deadly weapon, it shows that tools can be used for very different things depending on how we choose to use them.</h3>
+      <h3>Student Synergy isn&apos;t some magic fix or shortcut—it&apos;s a tool meant to be used wisely. Just like pencils were made for writing, but even someone like John Wick, known as Baba Yaga, turned one into a deadly weapon, it shows that tools can be used for very different things depending on how we choose to use them.</h3>
       </div>
     </main>
   );
