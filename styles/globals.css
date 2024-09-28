@@ -6,6 +6,8 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --ck-color-mention-background: black;
+    --ck-color-mention-text: white;
 }
 
 /* @media (prefers-color-scheme: dark) { */
@@ -37,10 +39,13 @@
 .ck.ck-content ul li {
   list-style-type: inherit;
 }
-
+.ck{
+  display:block;
+}
 .ck.ck-content ul {
   /* Default user agent stylesheet, you can change it to your needs. */
   padding-left: 40px;
+  background-color: #23C4F8;
 }
 
 .ck.ck-content ol,
@@ -55,7 +60,9 @@
 .ck.ck-content {
     height: fit-content;
 }
-
+.ck.ck-toolbar__items{
+  background-color: #23C4F8;
+}
 
 .loader {
   --background: linear-gradient(135deg, #23C4F8, #275EFE);

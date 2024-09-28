@@ -179,7 +179,7 @@ export default function Note() {
     
 
     return (
-        <div>
+        <div className='flex-col justify-between max-w-full'>
             <NavComp></NavComp>
             <div style={{ alignItems:"center",  marginTop:"2vh",paddingBottom:"2vh", display:"flex", flexDirection:"column", alignContent:"center", alignItems:"center"
             }}>
@@ -220,7 +220,7 @@ export default function Note() {
         {!error && <button onClick={getResponse}>Submit</button>}
         {error && <button onClick={clear}>Clear</button>}
         {error && <p>{error}</p>}
-        </div>
+      </div>
         <div className='search-results'>
             {loadingState && <p>Loading...</p>}
         {chatHistory.map((chatItem, index) => (

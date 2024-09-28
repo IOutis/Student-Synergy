@@ -54,7 +54,7 @@ export default function NavComp() {
                         aria-current={item.current ? "page" : undefined}
                         className={classNames(
                           item.current
-                            ? "bg-gray-900 text-white"
+                            ? "text-white hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium flex flex-col justify-center"
                             : "text-gray-300 hover:bg-gray-700 hover:text-white",
                           "rounded-md px-3 py-2 text-sm font-medium flex flex-col justify-center"
                         )}
@@ -63,9 +63,9 @@ export default function NavComp() {
                       </a>
                     ))}
 
-                    <Menu as="div" className="relative">
+                    <Menu as="div" className="" >
                       <div>
-                        <MenuButton className="px-3 py-2 text-sm  text-gray-300 hover:text-white">
+                        <MenuButton className="rounded-md hidden  sm:block text-gray-300 hover:bg-gray-700 hover:text-white  py-2 text-sm font-medium flex flex-col flex xs:flex xs:flex-col  px-3 py-2 text-sm  text-gray-300 hover:text-white">
                           Services
                         </MenuButton>
                       </div>
@@ -78,7 +78,7 @@ export default function NavComp() {
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <MenuItems className="absolute left-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           {services.map((item) => (
                             <MenuItem key={item.name}>
                               {({ active }) => (
@@ -97,6 +97,7 @@ export default function NavComp() {
                         </MenuItems>
                       </Transition>
                     </Menu>
+                    
 
                     {session && (
                       <Menu as="div" className="relative">
@@ -114,7 +115,7 @@ export default function NavComp() {
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <MenuItems className="absolute  z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <MenuItem>
                             {({ active }) => (
                               <Link
@@ -257,7 +258,7 @@ export default function NavComp() {
           </div>
 
           <DisclosurePanel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
+            <div className="space-y-1 px-2 pb-3 pt-2 flex-col justify-center">
               {navigation.map((item) => (
                 <DisclosureButton
                   key={item.name}
@@ -265,7 +266,7 @@ export default function NavComp() {
                   href={item.href}
                   className={classNames(
                     item.current
-                      ? "bg-gray-900 text-white"
+                      ? "text-white text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 "
                       : "text-gray-300 hover:bg-gray-700 hover:text-white",
                     "block rounded-md px-3 py-2 text-base font-medium"
                   )}
@@ -274,10 +275,10 @@ export default function NavComp() {
                   {item.name}
                 </DisclosureButton>
               ))}
-              <Menu as="div" className="relative">
+              <Menu as="div" className="rounded-md text-gray-300 hover:bg-gray-700 hover:text-white">
                 <div>
-                  <MenuButton className="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
-                    Services
+                  <MenuButton className="block   text-base font-medium  text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
+                 Services
                   </MenuButton>
                 </div>
                 <Transition
@@ -289,7 +290,7 @@ export default function NavComp() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <MenuItems className="absolute left-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <MenuItems className="absolute w-full flex-col justify-center items-center left-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     {services.map((item) => (
                       <MenuItem key={item.name}>
                         {({ active }) => (
@@ -401,9 +402,11 @@ export default function NavComp() {
                 </button>
               )}
               {!session && (
-                <button onClick={() => signIn("google")} className="text-white">
+                <div className="text-white text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 ">
+                <button onClick={() => signIn("google")} className="">
                   Sign in
                 </button>
+                </div>
               )}
             </div>
           </DisclosurePanel>

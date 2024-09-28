@@ -29,7 +29,7 @@ router.post(async (req, res) => {
         },
         {
             role: 'user',
-            parts: [{ text: `I am going to share some html content analyse it. I am sharing the html content for every conversion even though sometimes its not needed. Because I am using gemini api and this is the simplest method to apply.` }],
+            parts: [{ text: `I am going to share some HTML content, analyze it. I am sharing the HTML content for every conversation, even though sometimes it's not needed because I am using the Gemini API, and this is the simplest method to apply.` }],
         },
         {
             role: 'model',
@@ -37,13 +37,38 @@ router.post(async (req, res) => {
         },
         {
             role: 'user',
-            parts: [{ text: "Ok from this moment users will interact with you. Sometimes the users question may or maynot be regarding the html content. If the user specifically asks like quiz me or give summary or something like that then you can use the html content. " }],
+            parts: [{ text: "Ok, from this moment users will interact with you. Sometimes the user's question may or may not be regarding the HTML content. If the user specifically asks for something like a quiz, summary, or something else, then you can use the HTML content." }],
         },
         {
             role: 'model',
-            parts: [{ text: 'OK sir' }],
+            parts: [{ text: 'Understood! I will analyze HTML content only when relevant requests are made, like summarizing, quizzing, or other tasks related to it.' }],
         },
+        {
+            role: 'user',
+            parts: [{ text: 'The website is called Student Synergy and it includes a gamified task manager, CKEditor-powered notes, public and private communities, quizzes, and a personalized dashboard.' }],
+        },
+        {
+            role: 'model',
+            parts: [{ text: "Got it! I’ll help users by referring to Student Synergy's features like task management, communities, notes, quizzes, and dashboard. I'll also be ready to analyze any HTML content if they request summaries or quizzes." }],
+        },
+        {
+            role: 'user',
+            parts: [{ text: "sometimes the html content wont be available if the html content is not available then you just have to answer the user\'s query normally you wont need any html content to answer query. Only if the query contains the html content you have to consider that for context needed." }],
+        },
+        {
+            role: 'model',
+            parts: [{ text: "Got it! I’ll help users with their queries accodingly , html content or no html content. If there is no html content I will not consider any context and answer to the best of my knowledge. Only if there is any html content then I will consider it for context" }],
+        },
+        {
+            role: 'user',
+            parts: [{text: "Don't worry I will tell when the html content for the notes is being sent in the message. this will be like a code sentence when i say this sentence you have to take the next sentence as html content. I will say 'This is html content galahad you know what to do: ' then its signal to consider the html content to answer the users query "}]
+        },
+        {
+            role: 'model',
+            parts: [{ text: "Alright, I understand the signal you'll send when the HTML content is available. When you say 'This is html content galahad you know what to do:' I will consider the next sentence as HTML content and use it for context when answering the user's query." }]
+        }
     ];
+    
 
     let combinedHistory = existingHistory;
     const newHistory = req.body.history;
@@ -59,8 +84,13 @@ router.post(async (req, res) => {
     const chat = model.startChat({
         history: combinedHistory,
     });
-
-    const msg = req.body.message+"This is html content: "+req.body.htmlContent;
+    let msg =''
+    if(req.body.htmlContent){
+     msg = req.body.message+"This is html content galahad you know what to do: "+req.body.htmlContent;
+    }
+    else{
+        msg = req.body.message
+    }
     const result = await chat.sendMessage(msg);
     const response = await result.response;
     const text = response.text();
