@@ -5,7 +5,6 @@ import { asBlob } from 'html-docx-js-typescript';
 import { saveAs } from 'file-saver';
 import LoadingComp from '../../components/LoadingComp';
 import { useSession } from "next-auth/react";
-import NavComp from '../../components/NavComp';
 
 
 // Import the component dynamically with the correct capitalization
@@ -113,7 +112,7 @@ export default function Note() {
         return <LoadingComp />;
     }
     if (!session) {
-        return (<div> <NavComp></NavComp>
+        return (<div> 
         <div style={{ display:"flex", justifyContent:"center", marginTop:"6vh"}}>
         <p>Please sign in to view your notes.</p></div>
         </div>);
@@ -180,7 +179,7 @@ export default function Note() {
 
     return (
         <div className='flex-col justify-between max-w-full'>
-            <NavComp></NavComp>
+            
             <div style={{ alignItems:"center",  marginTop:"2vh",paddingBottom:"2vh", display:"flex", flexDirection:"column", alignContent:"center", alignItems:"center"
             }}>
                 {/* <LoadingComp></LoadingComp> */}

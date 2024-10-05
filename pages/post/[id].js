@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import NavComp from '../../components/NavComp';
 import LoadingComp from '../../components/LoadingComp';
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
@@ -16,9 +15,7 @@ const Post = () => {
     const [files, setFiles] = useState([]);
     const { data: session } = useSession();
     const [likeFlag, setLikeFlag] = useState(false);
-    // if(!session){
-    //     return <><NavComp></NavComp> <p>Login</p></>
-    // }
+    
 
     useEffect(() => {
         if (id) {
@@ -70,7 +67,7 @@ const Post = () => {
     if (!session) {
         return (
             <>
-                <NavComp />
+                
                 <p>Login</p>
             </>
         );
@@ -82,7 +79,7 @@ const Post = () => {
 
     return (
         <div>
-            <NavComp />
+           
             <div className='flex justify-center flex-col items-center'>
                 <h1>{post.title}</h1>
                 <p><strong>Posted by:</strong> {post.user}</p>

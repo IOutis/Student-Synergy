@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavComp from '../../components/NavComp';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -50,7 +49,6 @@ export default function Community() {
   if (!session) {
     return (
       <div>
-        <NavComp />
         <p>Not Logged in</p>
       </div>
     );
@@ -59,7 +57,6 @@ export default function Community() {
   if (loading) {
     return (
       <div>
-        <NavComp />
         <p>Loading...</p>
       </div>
     );
@@ -67,7 +64,6 @@ export default function Community() {
 
   return (
     <div>
-      <NavComp />
       <h1>{community?.name}</h1>
       <p>{community?.description}</p>
 

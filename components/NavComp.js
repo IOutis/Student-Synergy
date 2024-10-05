@@ -313,7 +313,7 @@ export default function NavComp() {
               {session && (
                 <Menu as="div" className="relative">
                   <div>
-                    <MenuButton className="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
+                    <MenuButton className="block   text-base font-medium  text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
                       {session.user.name}
                     </MenuButton>
                   </div>

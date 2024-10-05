@@ -4,7 +4,6 @@ import Habits from '../components/Habits';
 import DailyTasks from '../components/DailyTasks';
 import TodoList from '../components/TodoList';
 import Rewards from '../components/Rewards';
-import NavComp from '../components/NavComp';
 import Profile from '../components/Profile';
 import { useSession } from 'next-auth/react';
 import LoadingComp from '../components/LoadingComp'
@@ -14,7 +13,6 @@ const Dashboard = () => {
   if (!session) {
     return (
       <div>
-        <NavComp></NavComp>
         <div style={{ display:"flex", justifyContent:"center", marginTop:"6vh"}}>
           <p>Please sign in to view your tasks.</p>
         </div>
@@ -27,7 +25,6 @@ const Dashboard = () => {
 
   return (
     <Box>
-      <NavComp></NavComp>
       <Heading mb="4">Gamified Task Manager</Heading>
       <Profile user={session.user} />
       <div className='flex flex-row p-6 justify-between max-w-[90%]' style={{paddingLeft:'6px', marginLeft:"4vw"}}>

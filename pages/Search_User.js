@@ -2,7 +2,6 @@
 import React from 'react';
 import UserProfile from '../components/UserProfileComp';
 import { useSession } from 'next-auth/react';
-import NavComp from '../components/NavComp';
 
 export default function SearchUserProfilePage() {
     const { data: session, status } = useSession();
@@ -17,7 +16,6 @@ export default function SearchUserProfilePage() {
 
     return (
         <div>
-            <NavComp></NavComp>
             <UserProfile email={session.user.email} name={session.user.name} />
 
         </div>

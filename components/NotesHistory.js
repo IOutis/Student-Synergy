@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import NavComp from '../components/NavComp'
 
 export default function NotesHistory() {
     const { data: session } = useSession();
@@ -35,7 +34,6 @@ export default function NotesHistory() {
     if (!session) {
         return (
             <div>
-                <NavComp />
                 <div style={{ display: "flex", justifyContent: "center", marginTop: "6vh" }}>
                     <p>Please sign in to view your tasks.</p>
                 </div>

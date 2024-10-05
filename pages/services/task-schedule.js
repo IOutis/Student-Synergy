@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import NavComp from '../../components/NavComp';
 import { useSession } from "next-auth/react";
 import Link from 'next/link';
 
@@ -117,7 +116,7 @@ export default function TaskSchedule() {
 
   return (
     <div>
-      <NavComp />
+      
       <h1>Task Schedule</h1>
       <h2>Filter the tasks by :</h2>
       <div>

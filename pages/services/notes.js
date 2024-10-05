@@ -1,7 +1,6 @@
 
 "use client";
 import React from "react";
-import NavComp from '../../components/NavComp';
 import dynamic from 'next/dynamic';
 import { useSession } from "next-auth/react";
 import NotesHistory from "../../components/NotesHistory";
@@ -12,7 +11,7 @@ const CustomEditor = dynamic( () => import( '../../components/custom-editor' ), 
 export default function Notes() {
   const { data: session, status } = useSession();
   if (!session) {
-    return (<div> <NavComp></NavComp>
+    return (<div> 
     <div style={{display:"flex", justifyContent:"center", marginTop:"6vh"}}>
     <p>Please sign in to view your tasks.</p></div>
     </div>);
@@ -22,7 +21,7 @@ export default function Notes() {
   }
   return (
     <div>
-        <NavComp></NavComp>
+        
         
         <main className="w-[60vw] min-h-[50vh]" style={{position:"absolute", marginLeft:"30vw"}}>
         <CustomEditor></CustomEditor>

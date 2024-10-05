@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import NavComp from '../components/NavComp';
 import { useRouter } from 'next/router';
 const CreateCommunity = () => {
   const router = useRouter()
@@ -10,7 +9,7 @@ const CreateCommunity = () => {
   const [approvalType, setApprovalType] = useState('automatic'); // New field
   const { data: session, status } = useSession();
   if (!session) {
-    return (<div> <NavComp></NavComp>
+    return (<div> 
     <div style={{display:"flex", justifyContent:"center", marginTop:"6vh"}}>
     <p>Please sign in to view your tasks.</p></div>
     </div>);
