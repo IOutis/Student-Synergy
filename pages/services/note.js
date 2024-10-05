@@ -43,7 +43,7 @@ export default function Note() {
             const fileRes = await fetch(`/api/get_file?id=${id}`);
             const fileData = await fileRes.json();
             setFiles(fileData.files);
-            console.log("Files :", typeof(files))
+            // console.log("Files :", fileData)
             
             // Access check
             if (data.user === session.user.email) {
@@ -91,6 +91,20 @@ export default function Note() {
         }
     };
 
+    const handleFileDelete= async(id)=>{
+        console.log("ID : ",id)
+        const response = await fetch(`/api/delete_file?id=${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+        console.log(data);
+        if (!response.ok) {
+            alert('Network response was not ok');
+        } else {
+            router.push('/services/notes');
+        }
+    }
     const handleDelete = async (id) => {
         const response = await fetch(`/api/editordelete?id=${id}`, {
             method: 'DELETE',
@@ -215,8 +229,9 @@ export default function Note() {
                                 >
                                 <a href={file.url} download style={{ textDecoration: "none", color: "#000" }}>
                                     <strong>{file.filename}</strong>
-                                    <p style={{ marginTop: "8px", color: "#007bff" }}>Download</p>
-                                </a>
+                                    <p style={{ marginTop: "8px", color: "#007bff" }}>Download</p></a>
+                                    {access && <button style={{color:"red"}} onClick={()=>{handleFileDelete(file.id)}}>Delete</button>}
+                                
                                 </div>
                             ))}
                             </div>

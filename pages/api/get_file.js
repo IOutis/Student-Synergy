@@ -28,6 +28,7 @@ router.get(async (req, res) => {
 
         // Construct URLs for file downloads
         const filesWithUrls = note.files.map(file => ({
+            id:file._id,
             filename: file.filename,
             url: `/api/download_file?fileId=${file._id}`, // You can create a download route
         }));
