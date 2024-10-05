@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -41,6 +40,7 @@
 }
 .ck{
   display:block;
+  background-color: red;
 }
 .ck.ck-content ul {
   /* Default user agent stylesheet, you can change it to your needs. */
@@ -60,9 +60,32 @@
 .ck.ck-content {
     height: fit-content;
 }
-.ck.ck-toolbar__items{
-  background-color: #23C4F8;
+.ck-editor__editable {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  padding: 10px;
 }
+
+.ck.ck-editor__main {
+  width: 100%;
+}
+.ck-content {
+  overflow: auto;
+}
+@media (max-width: 600px) {
+  .editor-container {
+      width: 100%;
+      padding: 10px;
+  }
+}
+.ck.ck-editor {
+  position: relative !important;
+  width: 100% !important;
+}
+
+
 
 .loader {
   --background: linear-gradient(135deg, #23C4F8, #275EFE);

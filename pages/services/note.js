@@ -183,21 +183,53 @@ export default function Note() {
             <div style={{ alignItems:"center",  marginTop:"2vh",paddingBottom:"2vh", display:"flex", flexDirection:"column", alignContent:"center", alignItems:"center"
             }}>
                 {/* <LoadingComp></LoadingComp> */}
-                <h1 style={{ textAlign: "center", fontWeight:"bold" }} aria-readonly>{note.title}</h1>
-                {files.length > 0 && (
-                    <div>
-                        <h2 style={{ textAlign: "center", fontWeight: "bold" }}>Attached Files:</h2>
-                        <ul>
+                <h1 style={{ textAlign: "center", fontWeight: "bold" }} aria-readonly>
+                        {note.title}
+                        </h1>
+                        {files.length > 0 && (
+                        <div>
+                            <h2 style={{ textAlign: "center", fontWeight: "bold", paddingBottom: "6px" }}>
+                            Attached Files:
+                            </h2>
+                            <div 
+                            className='items-center'
+                            style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                justifyContent: "center",
+                                gap: "15px",
+                                marginLeft: "10px",
+                            }}
+                            >
                             {files.map((file, index) => (
-                                <li key={index}>
-                                    <a href={file.url} download>{file.filename}</a>
-                                </li>
+                                <div
+                                key={index}
+                                style={{
+                                    border: "1px solid #ccc",
+                                    borderRadius: "8px",
+                                    padding: "10px",
+                                    textAlign: "center",
+                                    width: "150px",
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                }}
+                                >
+                                <a href={file.url} download style={{ textDecoration: "none", color: "#000" }}>
+                                    <strong>{file.filename}</strong>
+                                    <p style={{ marginTop: "8px", color: "#007bff" }}>Download</p>
+                                </a>
+                                </div>
                             ))}
-                        </ul>
-                    </div>
-                )}
+                            </div>
+                        </div>
+                        )}
 
-                <DisplayEditor note={note} access={access} />
+                
+
+                        <div 
+                        className="ck-editor-container w-full relative"                        style={{ padding: "10px" }}
+                        >
+                        <DisplayEditor note={note} access={access} />
+                        </div>
 {        access&&        <button onClick={() => handleDelete(note._id)} type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
 }                {/* <button onClick={() => handleDelete(note._id)}>Delete</button> */}
                 {/* <button onClick={() => { handleDownload(note.content) }}>Download DOCX</button> */}
@@ -206,8 +238,8 @@ export default function Note() {
                 <p><em>Works only in Desktop for some silly reason. Format error in the mobiles</em></p>
                 <p><strong>For mobiles, after downloading the document convert it into PDF on <u><a href="https://cloudconvert.com/" target="_blank">cloudconvert website</a></u> , then you can view the document</strong></p>
                 <br />
-                
-            </div>
+             </div>   
+            
             <div className='app'>
       
       <p>

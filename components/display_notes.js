@@ -87,7 +87,7 @@ function DisplayEditor({note,access}) {
     return (
         <div>
             {/* <p>Access: {access ? "Granted" : "Denied"}</p> */}
-            <form onSubmit={handleSubmit} style={{width:"50vw", display:"flex", flexDirection:"column", justifyContent:"center", alignContent:"center", alignItems:"center"}}>
+            <form onSubmit={handleSubmit} style={{width:"90%", display:"flex", flexDirection:"column", justifyContent:"center", alignContent:"center", alignItems:"center",marginLeft:"5%"}}>
                 <CKEditor
                     editor={ClassicEditor}
                     data={editorData}
