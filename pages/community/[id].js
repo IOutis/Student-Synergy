@@ -92,6 +92,7 @@ export default function Community() {
       <p>{community?.description}</p>
       {adminaccess && (<div>
         <a href={`/community/${id}/requests`}><h2>Requests Page</h2></a>
+        <p>Members joined : {length(community.members)}</p>
       </div>)}
       <br />
       {adminaccess && (
