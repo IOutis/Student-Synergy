@@ -31,7 +31,7 @@ export default async function handler(req, res) {
           await community.save();
         }
         return res.status(200).json({ message: 'Join request submitted. Awaiting approval.' });
-      } else {
+      } else if(community.approvalType === 'automatic') {
         // Automatic approval: directly add user to members
         if (!community.members.includes(userEmail)) {
           community.members.push(userEmail);
