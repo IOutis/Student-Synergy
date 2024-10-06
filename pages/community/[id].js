@@ -58,6 +58,7 @@ export default function Community() {
   }, [id, session]);
   
   const handleJoinCommunity = async () => {
+    console.log("sending the request...");
     try {
       const response = await fetch('/api/communities/join', {
         method: 'POST',
