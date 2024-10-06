@@ -57,36 +57,28 @@ export default function Community() {
     }
   }, [id, session]);
   
-  const handleJoinCommunity = async () => {
-    console.log("sending the request...");
-    try {
-      const response = await fetch('/api/communities/join', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          communityId: id,
-          userEmail: session.user.email,
-        }),
-      });
-  
-      // Log the response to see what you get
-      console.log('Raw response:', response);
-  
-      // Check if response is ok before parsing as JSON
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-  
-      const result = await response.json();
-      alert(result.message);
-      window.location.reload();
-    } catch (error) {
-      console.error('Error joining community', error);
-    }
-  };
-  
+  const handleJoinCommunity = () => {
+    console.log("sending request...")
+
+    // Construct query string parameters
+    const queryParams = new URLSearchParams({
+      communityId: id,
+      userEmail: session.user.email
+    }).toString();
+
+    // Use router.push to navigate and trigger API request
+    router.push(`/api/communities/join?${queryParams}`).then((res) => {
+      // Manually trigger alert based on query success/failure
+      const successMsg = community.approvalType === "manual"
+        ? 'Your request to join the community has been sent to the admin for approval.'
+        : 'Successfully joined the community!';
+
+      alert(successMsg);
+      window.location.reload(); // Refresh the page
+    }).catch(err => {
+      console.error('Error joining community', err);
+    });
+};
   
   
 
