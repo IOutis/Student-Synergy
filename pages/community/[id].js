@@ -59,13 +59,25 @@ export default function Community() {
   
   const handleJoinCommunity = async () => {
     try {
-      await axios.post(`/api/communities/join`, { communityId: id, userEmail: session.user.email });
-     alert(msg);
+      const response = await fetch('/api/communities/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          communityId: id,
+          userEmail: session.user.email,
+        }),
+      });
+  
+      const result = await response.json();
+      alert(result.message);
       window.location.reload();
     } catch (error) {
       console.error('Error joining community', error);
     }
   };
+  
   
 
   if (!session) {
