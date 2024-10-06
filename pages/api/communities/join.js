@@ -17,6 +17,7 @@ export default async function handler(req, res) {
       if (!community) {
         return res.status(404).json({ error: 'Community not found' });
       }
+      console.log("Community : ",community)
       console.log("Community approval : ",community.approvalType)
 
       // Check approval type
