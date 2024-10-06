@@ -35,6 +35,7 @@ export default function Community() {
             setAdminaccess(true);
           }
           console.log(community.approvalType)
+          console.log(community.members)
           if(community.members.includes(session.user.email)){
 
             setUseraccess(true);
