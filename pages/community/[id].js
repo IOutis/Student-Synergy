@@ -57,28 +57,31 @@ export default function Community() {
     }
   }, [id, session]);
   
-  const handleJoinCommunity = () => {
-    console.log("sending request...")
-
-    // Construct query string parameters
-    const queryParams = new URLSearchParams({
-      communityId: id,
-      userEmail: session.user.email
-    }).toString();
-
-    // Use router.push to navigate and trigger API request
-    router.push(`/api/communities/join?${queryParams}`).then((res) => {
-      // Manually trigger alert based on query success/failure
+  const handleJoinCommunity = async () => {
+    console.log("sending request...");
+    
+    try {
+      // Construct query string parameters
+      const response = await axios.get('/api/communities/join', {
+        params: {
+          communityId: id,
+          userEmail: session.user.email,
+        }
+      });
+      
+      // Success logic
       const successMsg = community.approvalType === "manual"
         ? 'Your request to join the community has been sent to the admin for approval.'
         : 'Successfully joined the community!';
-
+  
       alert(successMsg);
-      window.location.reload(); // Refresh the page
-    }).catch(err => {
+      window.location.reload(); // Refresh the page after successful join
+    } catch (err) {
       console.error('Error joining community', err);
-    });
-};
+      alert('Failed to join community');
+    }
+  };
+  
   
   
 
