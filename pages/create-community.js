@@ -67,6 +67,7 @@ const CreateCommunity = () => {
             >
               <option value="automatic">Automatic</option>
               <option value="manual">Manual</option>
+              <option value="password">Password</option>
             </select>
           </label>
         </div>

@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       if (!community) {
         return res.status(404).json({ error: 'Community not found' });
       }
-      console.log("Saved Posts",community.posts)
+      // console.log("Saved Posts",community.posts)
       // Return the community data
       res.status(200).json(community);
     } catch (error) {

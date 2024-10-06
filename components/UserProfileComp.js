@@ -110,11 +110,12 @@ const UserProfile = ({ email }) => {
         {searchResults.map((result) => (
           <li key={result._id}>
             <a href={`/user/${result.email}`}>{result.name}</a>
-            <button onClick={() => window.location.href = `/user/${result._id}/join-community`}>
-              Join Users Community
-            </button>
           </li>
         ))}
+
+        <br />
+       
+
       </ul>
     </div>
   );

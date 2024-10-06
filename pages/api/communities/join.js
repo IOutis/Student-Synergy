@@ -1,42 +1,44 @@
+// pages/api/communities/join.js
+
 import dbConnect from '../../../lib/dbconnect';
 import Community from '../../../models/CommunityModel';
-import User from '../../../models/User';
 
 export default async function handler(req, res) {
+  await dbConnect();
+
   if (req.method === 'POST') {
-    await dbConnect();
-
     const { communityId, userEmail } = req.body;
-
+    console.log("request.body = ",req.body);
     if (!communityId || !userEmail) {
+      
       return res.status(400).json({ error: 'Community ID and User Email are required' });
     }
 
     try {
-      // Find the community
       const community = await Community.findById(communityId);
 
       if (!community) {
         return res.status(404).json({ error: 'Community not found' });
       }
 
-      // Find the user and add the community to their joined list
-      const user = await User.findOne({ email: userEmail });
-
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+      // Check approval type
+      if (community.approvalType === 'manual') {
+        // Add user email to joinRequests array
+        if (!community.joinRequests.includes(userEmail)) {
+          community.joinRequests.push(userEmail);
+          await community.save();
+        }
+        return res.status(200).json({ message: 'Join request submitted. Awaiting approval.' });
+      } else {
+        // Automatic approval: directly add user to members
+        if (!community.members.includes(userEmail)) {
+          community.members.push(userEmail);
+          await community.save();
+        }
+        return res.status(200).json({ message: 'Successfully joined the community!' });
       }
-
-      if(!community.members.includes(userEmail)){
-        community.members.push(userEmail);
-        await community.save();
-      }
-    //   console.log(community.members)
-
-      res.status(200).json({ message: 'Joined community successfully' });
     } catch (error) {
-        console.log("ERROR in joining: ",error)
-      res.status(500).json({ error: 'Error joining community' });
+      res.status(500).json({ error: 'Error handling join request' });
     }
   } else {
     res.status(405).json({ error: 'Method not allowed' });

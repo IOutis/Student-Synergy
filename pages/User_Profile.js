@@ -15,7 +15,7 @@ export default function UserProfilePage() {
     }
 
     return (
-        <div>
+        <div style={{marginLeft : "6px"}}>
             <UserProfile email={session.user.email} />
         </div>
     );

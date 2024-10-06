@@ -9,7 +9,8 @@ export default function Community() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [access, setAccess] = useState(false);
+  const [useraccess, setUseraccess] = useState(false);
+  const [adminaccess, setAdminaccess] = useState(false);
   const [community, setCommunity] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,13 @@ export default function Community() {
 
           // Check if the logged-in user is the admin
           if (response.data.adminEmail === session.user.email) {
-            setAccess(true);
+            setAdminaccess(true);
+          }
+          console.log(community.approvalType)
+          if(community.members.includes(session.user.email)){
+
+            setUseraccess(true);
+            console.log(useraccess)
           }
         } catch (error) {
           console.error('Error fetching community data', error);
@@ -45,6 +52,21 @@ export default function Community() {
       setLoading(false);
     }
   }, [id, session]);
+  const handleJoinCommunity = async () => {
+    try {
+      await axios.post(`/api/communities/join`, { communityId: id, userEmail: session.user.email });
+      // Optionally, update UI or refetch user data to reflect the joined community
+      if(community.approvalType == "manual"){
+        alert("Your request to join the community has been sent to the admin for approval.")
+      }
+      else{
+      alert('Successfully joined the community!');
+      }
+      window.location.reload()
+    } catch (error) {
+      console.error('Error joining community', error);
+    }
+  };
 
   if (!session) {
     return (
@@ -53,6 +75,7 @@ export default function Community() {
       </div>
     );
   }
+
 
   if (loading) {
     return (
@@ -66,14 +89,18 @@ export default function Community() {
     <div>
       <h1>{community?.name}</h1>
       <p>{community?.description}</p>
-
-      {access && (
+      {adminaccess && (<div>
+        <a href={`/community/${id}/requests`}><h2>Requests Page</h2></a>
+      </div>)}
+      <br />
+      {adminaccess && (
         <div>
           <h2>Admin Controls</h2>
           <button>Edit Community</button>
           <a href={`/community/post/${id}`}>Create Post</a>
         </div>
       )}
+      {useraccess &&
       <div>
         <h2>Community Posts</h2>
         {posts.length > 0 ? (
@@ -89,6 +116,13 @@ export default function Community() {
           <p>No posts yet</p>
         )}
       </div>
+}
+{!useraccess && <p>True</p>}
+{(!useraccess) && (<div>
+  <p>Not Authorized</p> 
+  <button onClick={()=>{handleJoinCommunity()}}>Join Community</button>
+  
+</div>)}
     </div>
   );
 }
