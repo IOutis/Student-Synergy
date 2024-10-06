@@ -22,7 +22,9 @@ export default async function handler(req, res) {
       }
 
       // Check approval type
+      console.log("Community : ",community.approvalType);
       if (community.approvalType === 'manual') {
+        console.log("Community : ",community.approvalType);
         // Add user email to joinRequests array
         if (!community.joinRequests.includes(userEmail)) {
           community.joinRequests.push(userEmail);
