@@ -70,6 +70,14 @@ export default function Community() {
         }),
       });
   
+      // Log the response to see what you get
+      console.log('Raw response:', response);
+  
+      // Check if response is ok before parsing as JSON
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
       const result = await response.json();
       alert(result.message);
       window.location.reload();
@@ -77,6 +85,7 @@ export default function Community() {
       console.error('Error joining community', error);
     }
   };
+  
   
   
 

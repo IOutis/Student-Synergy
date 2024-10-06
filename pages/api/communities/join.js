@@ -17,6 +17,7 @@ export default async function handler(req, res) {
       if (!community) {
         return res.status(404).json({ error: 'Community not found' });
       }
+      console.log("Community approval : ",community.approvalType)
 
       // Check approval type
       if (community.approvalType === 'manual') {
@@ -35,9 +36,9 @@ export default async function handler(req, res) {
         return res.status(200).json({ message: 'Successfully joined the community!' });
       }
     } catch (error) {
-      res.status(500).json({ error: 'Error handling join request' });
+      return res.status(500).json({ error: 'Error handling join request' });
     }
   } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 }
