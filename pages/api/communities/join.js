@@ -1,45 +1,63 @@
 import dbConnect from '../../../lib/dbconnect';
 import Community from '../../../models/CommunityModel';
 
+const COMMUNITY_CACHE = new Map();
+
 export default async function handler(req, res) {
   console.log("IN Join API");
-  await dbConnect();
-  
 
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-  if (req.method === 'GET') {
-    const { communityId, userEmail } = req.query;  // Change here to use query parameters
+  const { communityId, userEmail } = req.query;
+  if (!communityId || !userEmail) {
+    return res.status(400).json({ error: 'Community ID and User Email are required' });
+  }
 
-    if (!communityId || !userEmail) {
-      return res.status(400).json({ error: 'Community ID and User Email are required' });
-    }
+  try {
+    // Connect to DB once per request
+    await dbConnect();
 
-    try {
-      const community = await Community.findById(communityId);
+    let community = COMMUNITY_CACHE.get(communityId);
 
+    if (!community) {
+      community = await Community.findById(communityId).lean().exec();
       if (!community) {
-        return res.status(404).json({ error: 'Community not found' });
+        throw new Error('Community not found');
       }
-      console.log("Community = ",community)
-
-      // Check approval type
-      if (community.approvalType === 'manual') {
-        if (!community.joinRequests.includes(userEmail)) {
-          community.joinRequests.push(userEmail);
-          await community.save();
-        }
-        return res.status(200).json({ message: 'Join request submitted. Awaiting approval.' });
-      } else if (community.approvalType === 'automatic') {
-        if (!community.members.includes(userEmail)) {
-          community.members.push(userEmail);
-          await community.save();
-        }
-        return res.status(200).json({ message: 'Successfully joined the community!' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Error handling join request' });
+      COMMUNITY_CACHE.set(communityId, community);
     }
-  } else {
-    res.status(405).json({ error: 'Method not allowed' });
+
+    console.log("Community = ", community);
+
+    // Process join request asynchronously
+    process.nextTick(async () => {
+      try {
+        await dbConnect();
+        
+        const result = await Community.findByIdAndUpdate(
+          communityId,
+          community.approvalType === 'manual'
+            ? { $addToSet: { joinRequests: userEmail } }
+            : { $addToSet: { members: userEmail } },
+          { new: true }
+        );
+
+        console.log("Updated community:", result);
+      } catch (error) {
+        console.error('Error processing join request:', error);
+      }
+    });
+
+    // Send immediate response
+    res.status(200).json({
+      message: community.approvalType === 'manual'
+        ? 'Join request submitted. Awaiting approval.'
+        : 'Successfully joined the community!'
+    });
+  } catch (error) {
+    console.error('Error handling join request', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }

@@ -75,11 +75,12 @@ export default function Community() {
         : 'Successfully joined the community!';
   
       alert(successMsg);
-      window.location.reload(); // Refresh the page after successful join
     } catch (err) {
       console.error('Error joining community', err);
-      alert('Failed to join community');
+      alert('Failed to join community. Try again after sometime');
+      
     }
+    window.location.reload(); 
   };
   
   
