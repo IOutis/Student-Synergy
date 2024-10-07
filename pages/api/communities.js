@@ -1,25 +1,32 @@
 import dbConnect from '../../lib/dbconnect'; // Adjust path as needed
 import Community from '../../models/CommunityModel'; // Adjust path as needed
 import User from '../../models/User';
+
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     await dbConnect();
     
-    const { name, description, approvalType,email } = req.body;
+    const { name, description, approvalType, password, email } = req.body;
 
-    if (!name || !description || !approvalType) {
-      return res.status(400).json({ error: 'All fields are required' });
+    // Validate required fields
+    if (!name || !description || !approvalType || (approvalType === 'password' && !password)) {
+      return res.status(400).json({ error: 'All fields are required, including password if approval type is set to password' });
     }
 
     try {
+      // Prepare the new community object, including the password if applicable
       const newCommunity = new Community({
         name,
         description,
         adminEmail: email, // Assuming user info is available
         approvalType,
+        password: approvalType === 'password' ? password : undefined, // Add password only if approvalType is 'password'
       });
 
+      // Save the new community to the database
       await newCommunity.save();
+
+      // Update the user's community list
       const user = await User.findOneAndUpdate(
         { email },
         { $push: { communityIds: newCommunity._id } },

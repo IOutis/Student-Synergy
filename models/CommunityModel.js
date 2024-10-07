@@ -11,6 +11,7 @@ const CommunitySchema = new mongoose.Schema({
       ref: 'PostData'  // Referencing posts from PostData model
     }],
     approvalType: { type: String, enum: ['automatic', 'manual','password'], required: true },
+    password: {type:String, default : null},
 }, { collection: 'Communities' });
 
 const Community = mongoose.models.Community || mongoose.model('Community', CommunitySchema);

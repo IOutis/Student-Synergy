@@ -10,7 +10,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { communityId, userEmail } = req.query;
+  const { communityId, userEmail, password } = req.query;  // Include password in query
+
   if (!communityId || !userEmail) {
     return res.status(400).json({ error: 'Community ID and User Email are required' });
   }
@@ -30,6 +31,13 @@ export default async function handler(req, res) {
     }
 
     console.log("Community = ", community);
+
+    // Handle password-based approval
+    if (community.approvalType === 'password') {
+      if (!password || community.password !== password) {
+        return res.status(400).json({ error: 'Incorrect password.' });
+      }
+    }
 
     // Process join request asynchronously
     process.nextTick(async () => {

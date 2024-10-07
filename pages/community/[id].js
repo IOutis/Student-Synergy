@@ -15,6 +15,8 @@ export default function Community() {
   const [posts, setPosts] = useState([]);
   const [msg, setMsg] = useState("Successfully joined the community!");
   const [loading, setLoading] = useState(true);
+  const [password, setPassword] = useState(""); // Add password state
+  const [showPasswordField, setShowPasswordField] = useState(false); // To control password input visibility
 
   useEffect(() => {
     if (id && session) {
@@ -34,8 +36,11 @@ export default function Community() {
           if (response.data.adminEmail === session.user.email) {
             setAdminaccess(true);
           }
-          if(response.data.approvalType=="manual"){
+          if(response.data.approvalType === "manual"){
             setMsg("Your request to join the community has been sent to the admin for approval.");
+          }
+          if (response.data.approvalType === "password") {
+            setShowPasswordField(true); // Show password field if approval type is password
           }
   
           // Ensure community is not null before accessing properties
@@ -66,6 +71,7 @@ export default function Community() {
         params: {
           communityId: id,
           userEmail: session.user.email,
+          password: showPasswordField ? password : undefined, // Add password query only if it's required
         }
       });
       
@@ -78,13 +84,9 @@ export default function Community() {
     } catch (err) {
       console.error('Error joining community', err);
       alert('Failed to join community. Try again after sometime');
-      
     }
     window.location.reload(); 
   };
-  
-  
-  
 
   if (!session) {
     return (
@@ -93,7 +95,6 @@ export default function Community() {
       </div>
     );
   }
-
 
   if (loading) {
     return (
@@ -149,7 +150,18 @@ export default function Community() {
               {useraccess && <p>user access : True</p>}
               {!useraccess && (
                 <div>
-                  <p>Not Authorized</p> 
+                  <p>Not Authorized</p>
+                  {showPasswordField && (
+                    <div>
+                      <label>Password:</label>
+                      <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter community password"
+                      />
+                    </div>
+                  )}
                   <button onClick={handleJoinCommunity}>Join Community</button>
                 </div>
               )}
@@ -161,5 +173,4 @@ export default function Community() {
       )}
     </div>
   );
-  
 }
