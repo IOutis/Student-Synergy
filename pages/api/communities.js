@@ -5,8 +5,7 @@ import User from '../../models/User';
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     await dbConnect();
-    
-    const { name, description, approvalType, password, email } = req.body;
+    const { name, description, approvalType, password, email } =  req.body;
     console.log("APPROVAL : ",approvalType)
     // Validate required fields
     if (!name || !description || !approvalType || (approvalType === 'password' && !password)) {
@@ -15,6 +14,9 @@ export default async function handler(req, res) {
 
     try {
       // Prepare the new community object, including the password if applicable
+      if(!approvalType){
+        return res.status(400).json({error:'approval type vanished just before entering into community'})
+      }
       const newCommunity = new Community({
         name,
         description,
