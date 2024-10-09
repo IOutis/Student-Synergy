@@ -3,6 +3,7 @@ import multer from 'multer';
 import dbConnect from '../../../lib/dbconnect';
 import PostData from '../../../models/Comm_Post';
 import Community from '../../../models/CommunityModel';
+import Section from '../../../models/SectionsModel';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -38,15 +39,16 @@ router.post(async (req, res) => {
 
     // If the post is private, associate it with the community
     if (isPrivate === 'true' && id) {
-      const community = await Community.findById(id);
-      console.log("community: ",community)
+      const section = await Section.findById(id);
+      console.log("section: ",section)
 
-      if (!community) {
+      if (!section) {
         throw new Error("Community not found");
       }
 
-      community.posts.push(savedData._id);
-      await community.save();
+      section.posts.push(savedData._id);
+      await section.save();
+      console.log("saved section : ",section)
     }
 
     res.status(201).json(savedData);

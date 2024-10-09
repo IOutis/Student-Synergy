@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     await dbConnect();
     
     const { name, description, approvalType, password, email } = req.body;
-
+    console.log("APPROVAL : ",approvalType)
     // Validate required fields
     if (!name || !description || !approvalType || (approvalType === 'password' && !password)) {
       return res.status(400).json({ error: 'All fields are required, including password if approval type is set to password' });
@@ -35,6 +35,9 @@ export default async function handler(req, res) {
 
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
+      }
+      if(!newCommunity.approvalType){
+        return res.status(400).json({ error: 'Approval type is required' });
       }
 
       res.status(201).json(newCommunity);
