@@ -35,6 +35,7 @@ export default function Community() {
   
           if (response.data.adminEmail === session.user.email) {
             setAdminaccess(true);
+            setUseraccess(true);
           }
           if(response.data.approvalType === "manual"){
             setMsg("Your request to join the community has been sent to the admin for approval.");
@@ -105,71 +106,82 @@ export default function Community() {
   }
 
   return (
-    <div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {community ? (
+    <div className="container mx-auto p-6">
+      {community ? (
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">{community.name}</h1>
+          <p className="text-lg text-gray-600 mb-6">{community.description}</p>
+
+          {adminaccess && (
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold text-gray-700">Admin Controls</h2>
+              <p className="text-gray-600 mb-2">Requests: {community.joinRequests.length}</p>
+              <p className="text-gray-600 mb-4">Members joined: {community.members.length}</p>
+              <Link href={`/community/${id}/requests`}>
+                <button className="inline-block bg-blue-600 text-white px-4 py-2 rounded-md mb-4 hover:bg-blue-700 transition">
+                  View Join Requests
+                </button>
+              </Link>
+                <Link href={`/community/${id}/settings`}>
+                <button className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition mr-4">
+                  Settings
+                </button>
+                </Link>
+              <Link href={`/community/post/${id}`}>
+                <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
+                  Create Post
+                </button>
+              </Link>
+            </div>
+          )}
+
+          {useraccess && (
             <div>
-              <h1>{community.name}</h1>
-              <p>{community.description}</p>
-              {adminaccess && (
-                <div>
-                  <a href={`/community/${id}/requests`}><h2>Requests Page</h2></a>
-                  <p>Requests: {community.joinRequests.length}</p>
-                  <p>Members joined: {community.members.length}</p>
-                </div>
-              )}
-              <br />
-              {adminaccess && (
-                <div>
-                  <h2>Admin Controls</h2>
-                  <button>Edit Community</button>
-                  <a href={`/community/post/${id}`}>Create Post</a>
-                </div>
-              )}
-              {useraccess && (
-                <div>
-                  <h2>Community Posts</h2>
-                  {posts.length > 0 ? (
-                    posts.map((post) => (
-                      <div key={post._id}>
-                        <Link href={`/post/${post._id}`}>
-                          <h3>{post.title}</h3>
-                          <p>{post.content}</p>
-                          <p>Posted by: {post.user}</p>
-                        </Link>
-                      </div>
-                    ))
-                  ) : (
-                    <p>No posts yet</p>
-                  )}
-                </div>
-              )}
-              {useraccess && <p>user access : True</p>}
-              {!useraccess && (
-                <div>
-                  <p>Not Authorized</p>
-                  {showPasswordField && (
-                    <div>
-                      <label>Password:</label>
-                      <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter community password"
-                      />
-                    </div>
-                  )}
-                  <button onClick={handleJoinCommunity}>Join Community</button>
-                </div>
+              <h2 className="text-2xl font-semibold text-gray-700 mb-4">Community Posts</h2>
+              {posts.length > 0 ? (
+                posts.map((post) => (
+                  <div key={post._id} className="mb-4 p-4 bg-gray-100 rounded-md shadow">
+                    <Link href={`/post/${post._id}`}>
+                      <button className="text-xl font-bold text-blue-700 hover:underline">{post.title}</button>
+                    <p className="text-gray-600 mt-2" dangerouslySetInnerHTML={{ __html: post.content }}></p>
+                    <p className="text-gray-500 text-sm mt-2">Posted by: {post.user}</p>
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-600">No posts yet</p>
               )}
             </div>
-          ) : (
-            <p>Community not found or error loading data.</p>
           )}
-        </>
+
+          {!useraccess && (
+            <div className="mt-6">
+              <p className="text-red-500 text-lg mb-4">You are not authorized to view this community's content.</p>
+              {showPasswordField && (
+                <div className="mb-4">
+                  <label className="block text-gray-700 mb-2">Enter Community Password:</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    placeholder="Password"
+                  />
+                </div>
+              )}
+              <button
+                onClick={handleJoinCommunity}
+                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+              >
+                Join Community
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex justify-center items-center h-screen">
+          <p className="text-gray-600 text-xl">Community not found or error loading data.</p>
+        </div>
       )}
     </div>
   );

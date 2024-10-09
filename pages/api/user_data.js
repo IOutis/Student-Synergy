@@ -21,7 +21,7 @@ export default async (req, res) => {
 
     // Find the communities that the user has joined
     const communitiesJoined = await Community.find({ members: { $in: [email] } });
-    console.log("Communitites joined : ", communitiesJoined)
+    //console.log("Communitites joined : ", communitiesJoined)
 
     res.status(200).json({ user, communitiesCreated, communitiesJoined });
   } catch (error) {

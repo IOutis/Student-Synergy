@@ -47,76 +47,93 @@ const UserProfile = ({ email }) => {
   const isCurrentUser = session?.user?.email === email;
 
   return (
-    <div>
-      <h1>{user?.name}s Profile</h1>
-          <p>Level: {user?.level}</p>
-          <p>Experience: {user?.experience}</p>
-          <p>Coins: {user?.coins}</p>
-
-      {isCurrentUser ? (
-        <>
-          <h2>Communities Created</h2>
-          <ul>
-            {communitiesCreated.map((community) => (
-              <li key={community._id}>
-                <a href={`/community/${community._id}`}>{community.name}</a>
-                <br />
-                <a href={`/community/${community._id}/requests`}>View Join Requests</a>
-              </li>
-            ))}
-          </ul>
-
-          <h2>Communities Joined</h2>
-          <ul>
-            {communitiesJoined.map((community) => (
-              <li key={community._id}>
-                <a href={`/community/${community._id}`}>{community.name}</a>
-              </li>
-            ))}
-          </ul>
-
-          <h2>Create a New Community</h2>
-          <button onClick={() => window.location.href = '/create-community'}>
-            Create Community
-          </button>
-        </>
-      ) : (
-        <div>
-          <h2>{user?.name}s Communities</h2>
-          <ul>
-            {communitiesCreated.map((community) => (
-              <li key={community._id}>
-                <a href={`/community/${community._id}`}>{community.name}</a>
-                <button onClick={() => handleJoinCommunity(community._id)}>
-                  Join Community
-                </button>
-              </li>
-            ))}
-          </ul>
+    <div className="container mx-auto py-10 px-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Profile Info */}
+        <div className="col-span-1 bg-white shadow-md rounded-lg p-6">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">{user?.name}'s Profile</h1>
+          <div className="space-y-2">
+            <p><strong>Level:</strong> {user?.level}</p>
+            <p><strong>Experience:</strong> {user?.experience}</p>
+            <p><strong>Coins:</strong> {user?.coins}</p>
+          </div>
         </div>
-      )}
-      <h2>Communities Joined</h2>
-          <ul>
-            {communitiesJoined.map((community) => (
-              <li key={community._id}>
-                <a href={`/community/${community._id}`}>{community.name}</a>
-              </li>
-            ))}
-          </ul>
 
-      <h2>Search Users</h2>
-      <input type="text" placeholder="Search by name or email" onChange={(e) => handleSearch(e.target.value)} />
-      <ul>
-        {searchResults.map((result) => (
-          <li key={result._id}>
-            <a href={`/user/${result.email}`}>{result.name}</a>
-          </li>
-        ))}
+        {/* Communities */}
+        <div className="col-span-2 bg-white shadow-md rounded-lg p-6">
+          {isCurrentUser ? (
+            <>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Communities Created</h2>
+              <ul className="list-disc list-inside mb-6">
+                {communitiesCreated.map((community) => (
+                  <li key={community._id} className="mb-2">
+                    <a href={`/community/${community._id}`} className="text-blue-600 hover:underline">
+                      {community.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
 
-        <br />
-       
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Communities Joined</h2>
+              <ul className="list-disc list-inside mb-6">
+                {communitiesJoined.map((community) => (
+                  <li key={community._id} className="mb-2">
+                    <a href={`/community/${community._id}`} className="text-blue-600 hover:underline">
+                      {community.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
 
-      </ul>
+              <button
+                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                onClick={() => window.location.href = '/create-community'}
+              >
+                Create New Community
+              </button>
+            </>
+          ) : (
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">{user?.name}'s Communities</h2>
+              <ul className="list-disc list-inside mb-6">
+                {communitiesCreated.map((community) => (
+                  <li key={community._id} className="mb-2 flex items-center justify-between">
+                    <a href={`/community/${community._id}`} className="text-blue-600 hover:underline">
+                      {community.name}
+                    </a>
+                    <button
+                      onClick={() => handleJoinCommunity(community._id)}
+                      className="ml-4 bg-green-500 text-white px-4 py-1 rounded-md hover:bg-green-600 transition"
+                    >
+                      Join
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Search Section */}
+      <div className="mt-10 bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Search Users</h2>
+        <input
+          type="text"
+          placeholder="Search by name or email"
+          className="w-full border-2 border-gray-300 p-2 rounded-md mb-4"
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+        <ul className="list-disc list-inside">
+          {searchResults.map((result) => (
+            <li key={result._id} className="mb-2">
+              <a href={`/user/${result.email}`} className="text-blue-600 hover:underline">
+                {result.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

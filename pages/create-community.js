@@ -46,37 +46,43 @@ const CreateCommunity = () => {
   };
 
   return (
-    <div>
-      <h1>Create a New Community</h1>
-      <form onSubmit={(e) => e.preventDefault()}>
+    <div className="container mx-auto max-w-lg mt-12 p-8 bg-white shadow-md rounded-lg">
+      <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Create a New Community</h1>
+      <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
         <div>
-          <label>
+          <label className="block text-lg font-semibold text-gray-700">
             Community Name:
-            <input 
-              type="text" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-              required 
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            Description:
-            <textarea 
-              value={description} 
-              onChange={(e) => setDescription(e.target.value)} 
-              required 
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            Approval Type:
-            <select 
-              value={approvalType} 
-              onChange={(e) => setApprovalType(e.target.value)} 
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter the community name"
+            />
+          </label>
+        </div>
+        <div>
+          <label className="block text-lg font-semibold text-gray-700">
+            Description:
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Describe the community"
+              rows="4"
+            />
+          </label>
+        </div>
+        <div>
+          <label className="block text-lg font-semibold text-gray-700">
+            Approval Type:
+            <select
+              value={approvalType}
+              onChange={(e) => setApprovalType(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="automatic">Automatic</option>
               <option value="manual">Manual</option>
@@ -85,24 +91,31 @@ const CreateCommunity = () => {
           </label>
         </div>
 
-        {/* Password Field - only visible when approvalType is "password" */}
         {approvalType === 'password' && (
           <div>
-            <label>
+            <label className="block text-lg font-semibold text-gray-700">
               Community Password:
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter a password for community access"
               />
             </label>
           </div>
         )}
 
-        <button type="button" onClick={handleCreateCommunity}>
-          Create Community
-        </button>
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={handleCreateCommunity}
+            className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Create Community
+          </button>
+        </div>
       </form>
     </div>
   );
