@@ -22,7 +22,8 @@ export default async function handler(req, res) {
         description,
         adminEmail: email, // Assuming user info is available
         approvalType,
-        password: approvalType === 'password' ? password : undefined, // Add password only if approvalType is 'password'
+        password: approvalType === 'password' ? password : undefined,
+        sections :[],
       });
 
       // Save the new community to the database
