@@ -51,7 +51,7 @@ const UserProfile = ({ email }) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Profile Info */}
         <div className="col-span-1 bg-white shadow-md rounded-lg p-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">{user?.name}'s Profile</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">{user?.name}&apos;s Profile</h1>
           <div className="space-y-2">
             <p><strong>Level:</strong> {user?.level}</p>
             <p><strong>Experience:</strong> {user?.experience}</p>
@@ -94,7 +94,7 @@ const UserProfile = ({ email }) => {
             </>
           ) : (
             <div>
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">{user?.name}'s Communities</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">{user?.name}&apos;s Communities</h2>
               <ul className="list-disc list-inside mb-6">
                 {communitiesCreated.map((community) => (
                   <li key={community._id} className="mb-2 flex items-center justify-between">

@@ -156,7 +156,7 @@ export default function Community() {
 
           {!useraccess && (
             <div className="mt-6">
-              <p className="text-red-500 text-lg mb-4">You are not authorized to view this community's content.</p>
+              <p className="text-red-500 text-lg mb-4">You are not authorized to view this community&apos;s content.</p>
               {showPasswordField && (
                 <div className="mb-4">
                   <label className="block text-gray-700 mb-2">Enter Community Password:</label>
