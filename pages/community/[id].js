@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import DOMPurify from 'dompurify';
 import {
   Box, Button, FormControl, FormLabel, Input, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton,
   ModalBody, ModalFooter, useDisclosure, Textarea, Alert, AlertIcon
@@ -33,19 +34,13 @@ export default function Community() {
           const response = await axios.get(`/api/communities/${id}`);
           setCommunity(response.data);
           
-  
           if (response.data.sections?.length > 0) {
             const sectionResponse = await axios.get(`/api/communities/${response.data._id}/sections`, {
               params: { id: response.data._id },
             });
-            //console.log(sectionResponse.data.sections[0])
             setSections(sectionResponse.data.sections);
-            //console.log("sections : ",sections)
-
-            
           }
 
-          console.log("Community : ",response.data.adminEmail === session.user.email)
           if (response.data.adminEmail === session.user.email) {
             setAdminaccess(true);
             setUseraccess(true);
@@ -75,31 +70,23 @@ export default function Community() {
     }
   }, [id, session]);
 
-
   useEffect(() => {
     const fetchSectionPosts = async () => {
       if (sections.length > 0) {
         try {
           const updatedSections = await Promise.all(
             sections.map(async (section) => {
-              console.log(`Fetching posts for section: ${section.title}, ${section._id}`);
-              
               if (section.posts.length > 0) {
                 const postResponse = await axios.get(`/api/communities/${community._id}/section/${section._id}`);
-                console.log(`Post data for section "${section.title}":`, postResponse.data.sections);
-  
-                // Return the section with its posts added
                 return {
                   ...section,
-                  posts: postResponse.data.sections,  // Update with the posts data
+                  posts: postResponse.data.sections,  
                 };
               } else {
-                console.log(`No posts in section "${section.title}"`);
-                return section;  // No posts, return as is
+                return section;
               }
             })
           );
-          // Update the sections state with the posts for each section
           setSections(updatedSections);
         } catch (error) {
           console.error('Error fetching posts:', error);
@@ -109,13 +96,16 @@ export default function Community() {
   
     fetchSectionPosts();
   }, [sections]);
-  
-  
-  
+
+  // Helper function to truncate HTML content safely
+  const truncateHTMLContent = (htmlContent, maxLength) => {
+    const plainText = DOMPurify.sanitize(htmlContent, { ALLOWED_TAGS: [] }); // Strips HTML tags
+    return plainText.length > maxLength
+      ? plainText.substring(0, maxLength) + "..."
+      : plainText;
+  };
 
   const handleJoinCommunity = async () => {
-    console.log("sending request...");
-    
     try {
       const response = await axios.get('/api/communities/join', {
         params: {
@@ -148,12 +138,10 @@ export default function Community() {
         title: sectionTitle,
         description: sectionDescription,
       });
-      console.log(response)
       alert("Section added successfully!");
       onClose();
       setSectionTitle(""); 
       setSectionDescription(""); 
-      // Reload community data to reflect the newly added section
       
     } catch (error) {
       console.error('Error adding section', error);
@@ -207,43 +195,46 @@ export default function Community() {
 
           {useraccess && (
             <div>
-            <h2 className="text-2xl font-semibold text-gray-700 mb-4">Sections</h2>
-            {community.sections && community.sections.length > 0 ? (
-              sections.map((section) => (
-                <div key={section._id} className="mb-6 p-4 bg-gray-100 rounded-md shadow">
-                  <h3 className="text-xl font-bold text-blue-700">{section.title}</h3>
-                  <p className="text-gray-600">{section.description}</p>
-                  
-                  <div className="mt-4">
-                    {section.posts && section.posts.length > 0 ? (
-                      <div>
-                        <h4 className="font-semibold">Posts:</h4>
-                        <ul className="list-disc pl-5">
-                          {section.posts.map((post) => (
-                            <li key={post._id} className="text-gray-700">
-                              <Link href={`/post/${post._id}`}>
-                                <p className="text-blue-600 hover:underline">{post.title}</p>
-                              </Link>
-                              <p dangerouslySetInnerHTML={{ __html: post.content }} />
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ) : (
-                      <p>No posts available in this section.</p>
-                    )}
+              <h2 className="text-2xl font-semibold text-gray-700 mb-4">Sections</h2>
+              {community.sections && community.sections.length > 0 ? (
+                sections.map((section) => (
+                  <div key={section._id} className="mb-6 p-4 bg-gray-100 rounded-md shadow">
+                    <h3 className="text-xl font-bold text-blue-700">{section.title}</h3>
+                    <p className="text-gray-600">{section.description}</p>
+                    
+                    <div className="mt-4">
+                      {section.posts && section.posts.length > 0 ? (
+                        <div>
+                          <h4 className="font-semibold">Posts:</h4>
+                          <ul className="list-disc pl-5">
+                            {section.posts.map((post) => (
+                              <li key={post._id} className="text-gray-700">
+                                <Link href={`/post/${post._id}`}>
+                                  <p className="text-blue-600 hover:underline">{post.title}</p>
+                                </Link>
+                                <p 
+                                  dangerouslySetInnerHTML={{
+                                    __html: truncateHTMLContent(post.content, 70) // Truncated HTML content
+                                  }}
+                                />
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : (
+                        <p>No posts available in this section.</p>
+                      )}
+                    </div>
+                
+                    <Link href={`/community/${id}/section/${section._id}`}>
+                      <Button colorScheme="green" className="mt-2">Create Post in this Section</Button>
+                    </Link>
                   </div>
-              
-                  <Link href={`/community/${id}/section/${section._id}`}>
-                    <Button colorScheme="green" className="mt-2">Create Post in this Section</Button>
-                  </Link>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-600">No sections available. Please ask an admin to add one.</p>
-            )}
-
-          </div>
+                ))
+              ) : (
+                <p className="text-gray-600">No sections available. Please ask an admin to add one.</p>
+              )}
+            </div>
           )}
 
           {!useraccess && (

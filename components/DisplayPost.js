@@ -15,7 +15,7 @@ function DisplayPost({post}) {
 
     return (
         <div>
-            <div  style={{width:"50vw", display:"flex", flexDirection:"column", justifyContent:"center", alignContent:"center", alignItems:"center"}}>
+            <div  style={{width:"90%", display:"flex", flexDirection:"column", justifyContent:"center", alignContent:"center", alignItems:"center"}}>
                 <CKEditor
                     editor={ClassicEditor}
                     data={post}

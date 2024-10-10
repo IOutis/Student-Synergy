@@ -29,6 +29,7 @@
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "docx": "^8.5.0",
+    "dompurify": "^3.1.7",
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
     "flowbite": "^2.4.1",
@@ -54,6 +55,7 @@
     "react-draggable": "^4.4.6",
     "react-redux": "^8.0.5",
     "react-tippy": "^1.4.0",
+    "react-toastify": "^10.0.5",
     "redux": "^4.2.1",
     "streamifier": "^0.1.1",
     "ws": "^8.18.0"
