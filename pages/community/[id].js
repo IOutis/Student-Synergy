@@ -213,25 +213,27 @@ export default function Community() {
                 <div key={section._id} className="mb-6 p-4 bg-gray-100 rounded-md shadow">
                   <h3 className="text-xl font-bold text-blue-700">{section.title}</h3>
                   <p className="text-gray-600">{section.description}</p>
+                  
                   <div className="mt-4">
-                          {section.posts && section.posts.length > 0 ? (
-                            <div>
-                              <h4 className="font-semibold">Posts:</h4>
-                              <ul className="list-disc pl-5">
-                                {posts.map((post) => (
-                                  <li key={post._id} className="text-gray-700">
-                                    <Link href={`/post/${post._id}`}>
-                                      <p className="text-blue-600 hover:underline">{post.title}</p>
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          ) : (
-                            <p>No posts available in this section.</p>
-                          )}
+                    {section.posts && section.posts.length > 0 ? (
+                      <div>
+                        <h4 className="font-semibold">Posts:</h4>
+                        <ul className="list-disc pl-5">
+                          {section.posts.map((post) => (
+                            <li key={post._id} className="text-gray-700">
+                              <Link href={`/post/${post._id}`}>
+                                <p className="text-blue-600 hover:underline">{post.title}</p>
+                              </Link>
+                              <p dangerouslySetInnerHTML={{ __html: post.content }} />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <p>No posts available in this section.</p>
+                    )}
                   </div>
-
+              
                   <Link href={`/community/${id}/section/${section._id}`}>
                     <Button colorScheme="green" className="mt-2">Create Post in this Section</Button>
                   </Link>
