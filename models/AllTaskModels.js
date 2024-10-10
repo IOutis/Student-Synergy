@@ -54,13 +54,15 @@ const UserSchema = new mongoose.Schema({
 const CommunitySchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
+  approvalType: { type: String, required: true ,default:'automatic'},
   adminEmail: { type: String, required: true },  // Renamed for clarity
   members: [{ type: String }],  // Assuming these are emails
   joinRequests: [{ type: String }],  // Assuming these are emails
-  posts: [{
+  sections: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'PostData'  // Referencing posts from PostData model
-  }]
+    ref: 'Section'  // Referencing posts from PostData model
+  }],
+  password: {type:String, default : null},
 }, { collection: 'Communities' });
 
 const Community = mongoose.models.Community || mongoose.model('Community', CommunitySchema);
@@ -75,6 +77,15 @@ const LevelSchema = new mongoose.Schema({
 
 const Level = mongoose.models.Level || mongoose.model('Level', LevelSchema);
 
+const SectionSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PostData', // Reference to your existing Post model
+  }],
+});
+
+const Section = mongoose.models.Section || mongoose.model('Section', SectionSchema);
 
 // Export models
 const Habit = mongoose.models.NewHabit || mongoose.model('NewHabit', HabitSchema);
@@ -82,4 +93,4 @@ const DailyTask = mongoose.models.NewDailyTask || mongoose.model('NewDailyTask',
 const NewTask = mongoose.models.NewTask || mongoose.model('NewTask', NewTaskSchema);
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
-export { Habit, DailyTask, User, NewTask,Level ,Community};
+export { Habit, DailyTask, User, NewTask,Level ,Community, Section};
