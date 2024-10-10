@@ -40,7 +40,7 @@ const CreateCommunity = () => {
       console.log(response);
       alert('Community created successfully!');
 
-      // router.push('/User_Profile');
+      router.push('/User_Profile');
     } catch (error) {
       console.error('Error creating community:', error);
       alert('Error creating community.');
