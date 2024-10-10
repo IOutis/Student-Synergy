@@ -226,9 +226,9 @@ export default function Community() {
                       )}
                     </div>
                 
-                    <Link href={`/community/${id}/section/${section._id}`}>
+                    {adminaccess && <Link href={`/community/${id}/section/${section._id}`}>
                       <Button colorScheme="green" className="mt-2">Create Post in this Section</Button>
-                    </Link>
+                    </Link>}
                   </div>
                 ))
               ) : (
