@@ -30,19 +30,21 @@ export default async function handler(req, res) {
     case 'POST':
       try {
         const { id } = req.query;
-        const { title, description } = req.body;
+        const { title, description,qaSection } = req.body;
 
         // Validate input
         if (!title || !description) {
           return res.status(400).json({ success: false, message: 'Title and description are required' });
         }
-
+        console.log("Section : ",qaSection)
         // Create a new section
         const newSection = new Section({
           title,
           description,
-          communityId: id, // Assuming you want to link the section back to the community
+          // communityId: id,
+          qaSection: qaSection?true:false // Assuming you want to link the section back to the community
         });
+        console.log("newSection:",newSection.qaSection)
 
         // Save the section to the database
         await newSection.save();

@@ -35,6 +35,7 @@ const CommunitySettings = () => {
     try {
       await axios.put(`/api/communities/${id}/rename`, { name });
       alert('Community renamed successfully!');
+      window.location.href = `/community/${id}`
     } catch (error) {
       console.error('Error renaming community:', error);
       alert('Failed to rename community.');

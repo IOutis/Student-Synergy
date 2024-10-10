@@ -26,7 +26,7 @@ export default function Community() {
   const [sectionDescription, setSectionDescription] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [sections, setSections] = useState([]);
-
+  const [qaSectionExists,setQaSectionExists] = useState(false);
   useEffect(() => {
     if (id && session) {
       const fetchCommunityData = async () => {
@@ -38,7 +38,11 @@ export default function Community() {
             const sectionResponse = await axios.get(`/api/communities/${response.data._id}/sections`, {
               params: { id: response.data._id },
             });
+            const sectionsData = sectionResponse.data.sections
             setSections(sectionResponse.data.sections);
+
+            const qaSection = sectionsData.find(section => section.title === "Q&A Section");
+            if (qaSection) setQaSectionExists(true);
           }
 
           if (response.data.adminEmail === session.user.email) {
@@ -104,6 +108,22 @@ export default function Community() {
       ? plainText.substring(0, maxLength) + "..."
       : plainText;
   };
+  const handleAddQASection = async () => {
+    // Handle adding the Q&A Section with a fixed title and description
+    try {
+      const response = await axios.post(`/api/communities/${id}/sections`, {
+        title: "Q&A Section",
+        description: "Post your queries and doubts here. Community members will respond.",
+        qaSection: true
+      });
+      //qaSection: { type: Boolean, default: false },
+      alert("Q&A Section added successfully!");
+      setQaSectionExists(true);
+    } catch (error) {
+      console.error('Error adding Q&A section', error);
+      alert('Failed to add Q&A Section. Try again later.');
+    }
+  };
 
   const handleJoinCommunity = async () => {
     try {
@@ -148,6 +168,26 @@ export default function Community() {
       alert('Failed to add section. Try again after sometime.');
     }
   };
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    if (confirmDelete) {
+        try {
+            const res = await fetch(`/api/comm_post/delete_post?id=${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to delete the post');
+            }
+
+            setPosts(posts.filter(post => post._id !== id));
+            alert('Post deleted successfully');
+        } catch (error) {
+            console.error('Error deleting post:', error.message);
+            alert('Failed to delete the post. Please try again later.');
+        }
+    }
+};
 
   if (!session) {
     return (
@@ -190,6 +230,15 @@ export default function Community() {
               <Button colorScheme="teal" onClick={onOpen} mt={4}>
                 Add Section
               </Button>
+              {!qaSectionExists && (
+                <Button
+                  colorScheme="orange"
+                  mt={4}
+                  onClick={handleAddQASection}
+                >
+                  Add Q&A Section
+                </Button>
+              )}
             </div>
           )}
 
@@ -217,6 +266,12 @@ export default function Community() {
                                     __html: truncateHTMLContent(post.content, 70) // Truncated HTML content
                                   }}
                                 />
+                                {((post.user===session.user.name)||adminaccess)&& <button
+                                  className="ml-4 bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition"
+                                  onClick={() => handleDelete(post._id)}
+                                >
+                                  Delete
+                                </button>}
                               </li>
                             ))}
                           </ul>
@@ -226,7 +281,7 @@ export default function Community() {
                       )}
                     </div>
                 
-                    {adminaccess && <Link href={`/community/${id}/section/${section._id}`}>
+                    {(section.qaSection||adminaccess) && <Link href={`/community/${id}/section/${section._id}`}>
                       <Button colorScheme="green" className="mt-2">Create Post in this Section</Button>
                     </Link>}
                   </div>

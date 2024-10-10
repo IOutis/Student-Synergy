@@ -83,6 +83,7 @@ const SectionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PostData', // Reference to your existing Post model
   }],
+  qaSection: { type: Boolean, default: false },
 });
 
 const Section = mongoose.models.Section || mongoose.model('Section', SectionSchema);
