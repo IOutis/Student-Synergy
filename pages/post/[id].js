@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import Comments from '../../components/Comments';
 import { toast } from 'react-toastify'; // Assuming you are using react-toastify for notifications
 import 'react-toastify/dist/ReactToastify.css';
+// import LoadingComp from '../../components/LoadingComp';
 
 const DisplayPost = dynamic(() => import('../../components/DisplayPost'), { ssr: false });
 
@@ -19,28 +20,42 @@ const Post = () => {
     const [likeFlag, setLikeFlag] = useState(false);
     const [isLiking, setIsLiking] = useState(false);  // To handle the like button loading state
     const [access,setAccess] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [loadingFiles, setLoadingFiles] = useState(false);
     useEffect(() => {
         if (id) {
             const fetchPost = async () => {
                 try {
+                    // setLoading(true);
                     const res = await fetch(`/api/comm_post/get_post_by_id?id=${id}`);
                     const data = await res.json();
                     console.log("got data : ",data[0])
+                    console.log("data length : ",data.length)
                     if (data && data.length > 0) {
+                        console.log("data setting starts")
                         setPost(data[0]);  // Accessing the first object in the array
                         setLikes(data[0].likes);  // Set initial likes
                         setLikeFlag(data[0].likedBy.includes(session?.user?.name || ''));
-                        console.log("post.user = ",post.user)
-                        if(post.user === session.user.name){
+                        console.log("data setting ends")
+                        console.log("user = ",data[0].user===session.user.name)
+                        if(data[0].user === session.user.name){
+                            console.log("post.user = ")
                             setAccess(true)
                         }
-                        
+                        // setLoading(false);
                         // Fetch files if there are any
                         if (data[0].fileIds && data[0].fileIds.length > 0) {
+                            console.log("Now staring to retrieve files")
+                            setLoadingFiles(true)
+                            console.log("Files loading : ",loadingFiles)
                             const filesRes = await fetch(`/api/comm_post/get_file?id=${data[0]._id}`);
                             const filesData = await filesRes.json();
                             setFiles(filesData.files);
+                            setLoadingFiles(false);
+                            console.log("Files loading : ",loadingFiles)
+                            
                         }
+                       
                     } else {
                         toast.error('Post not found');
                     }
@@ -80,7 +95,9 @@ const Post = () => {
     if (!post) {
         return <LoadingComp />;
     }
-
+    if(loading){
+        return <LoadingComp />
+    }
     return (
         <div className="container mx-auto p-4">
             <div className="post-container max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-6">
@@ -100,6 +117,7 @@ const Post = () => {
                         </ul>
                     </div>
                 )} */}
+                {loadingFiles && <p>Files Loading wait for some time please </p>}
                 {files.length > 0 && (
                         <div>
                             <h2 style={{ textAlign: "center", fontWeight: "bold", paddingBottom: "6px" }}>

@@ -10,11 +10,12 @@ const router = createRouter();
 
 router.get(async (req, res) => {
     await dbConnect();
+    console.log("started session")
     const session = await getServerSession(req, res, Nextauth);
-
     if (!session) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
+    console.log("Got session")
 
     const { id } = req.query; // Assuming you pass noteId as a query parameter
     const noteId = id;
