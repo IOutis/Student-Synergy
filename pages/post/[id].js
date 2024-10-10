@@ -25,6 +25,7 @@ const Post = () => {
                 try {
                     const res = await fetch(`/api/comm_post/get_post_by_id?id=${id}`);
                     const data = await res.json();
+                    console.log("got data : ",data[0])
                     if (data && data.length > 0) {
                         setPost(data[0]);  // Accessing the first object in the array
                         setLikes(data[0].likes);  // Set initial likes
