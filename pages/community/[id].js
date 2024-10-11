@@ -119,6 +119,7 @@ export default function Community() {
       //qaSection: { type: Boolean, default: false },
       alert("Q&A Section added successfully!");
       setQaSectionExists(true);
+      window.location.reload()
     } catch (error) {
       console.error('Error adding Q&A section', error);
       alert('Failed to add Q&A Section. Try again later.');
@@ -162,6 +163,7 @@ export default function Community() {
       onClose();
       setSectionTitle(""); 
       setSectionDescription(""); 
+      window.location.reload()
       
     } catch (error) {
       console.error('Error adding section', error);
@@ -182,12 +184,35 @@ export default function Community() {
 
             setPosts(posts.filter(post => post._id !== id));
             alert('Post deleted successfully');
+            window.location.reload()
         } catch (error) {
             console.error('Error deleting post:', error.message);
             alert('Failed to delete the post. Please try again later.');
         }
     }
 };
+const handleDeleteSection = async (id)=>{
+  
+  const confirmDelete = window.confirm("Are you sure you want to delete this section?");
+  if (confirmDelete) {
+    try {
+      const response = await axios.delete(`/api/communities/section_delete?id=${id}`,{
+        method:"DELETE",
+      })
+      console.log("response : ",response)
+
+      if(response.statusText!="OK"){
+        throw new Error('Failed to delete the section');
+      }
+      alert('Section Deleted successfully')
+      window.location.reload()
+    }
+    catch(error){
+      console.error('Error deleting section:', error.message);
+      alert('Failed to delete the section. Please try again later.');
+    }
+      }
+    }
 
   if (!session) {
     return (
@@ -249,6 +274,7 @@ export default function Community() {
                 sections.map((section) => (
                   <div key={section._id} className="mb-6 p-4 bg-gray-100 rounded-md shadow">
                     <h3 className="text-xl font-bold text-blue-700">{section.title}</h3>
+                    {adminaccess&&<button className='ml-4 bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition' onClick={()=>handleDeleteSection(section._id)}>Delete Section</button>}
                     <p className="text-gray-600">{section.description}</p>
                     
                     <div className="mt-4">

@@ -34,15 +34,31 @@ const UserProfile = ({ email }) => {
     }
   };
 
-  const handleJoinCommunity = async (communityId) => {
-    try {
-      await axios.post(`/api/communities/join`, { communityId, userEmail: session.user.email });
-      // Optionally, update UI or refetch user data to reflect the joined community
-      alert('Successfully joined the community!');
-    } catch (error) {
-      console.error('Error joining community', error);
-    }
-  };
+  // const handleJoinCommunity = async (communityId) => {
+  //   try {
+  //     await axios.post(`/api/communities/join`, { communityId, userEmail: session.user.email });
+  //     // Optionally, update UI or refetch user data to reflect the joined community
+  //     alert('Successfully joined the community!');
+  //   } catch (error) {
+  //     console.error('Error joining community', error);
+  //   }
+  // };
+  const handleDelete = async (id)=>{
+    const confirmDelete = window.confirm("Are you sure you want to delete this Community?");
+  if (confirmDelete) {
+    try{
+    axios.delete(`api/communities/delete_community?id=${id}`,{
+      method:"DELETE"
+    })
+    alert('Successfully Deleted the community!');
+    window.location.reload()
+  } catch (error) {
+    console.error('Error deleting community', error);
+  }
+}
+
+
+  }
 
   const isCurrentUser = session?.user?.email === email;
 
@@ -70,6 +86,7 @@ const UserProfile = ({ email }) => {
                     <a href={`/community/${community._id}`} className="text-blue-600 hover:underline">
                       {community.name}
                     </a>
+                    <button className='ml-4 bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition' onClick={()=>handleDelete(community._id)}>Delete Community</button>
                   </li>
                 ))}
               </ul>
@@ -101,12 +118,6 @@ const UserProfile = ({ email }) => {
                     <a href={`/community/${community._id}`} className="text-blue-600 hover:underline">
                       {community.name}
                     </a>
-                    <button
-                      onClick={() => handleJoinCommunity(community._id)}
-                      className="ml-4 bg-green-500 text-white px-4 py-1 rounded-md hover:bg-green-600 transition"
-                    >
-                      Join
-                    </button>
                   </li>
                 ))}
               </ul>

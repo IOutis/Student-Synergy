@@ -54,6 +54,7 @@ const CommunitySettings = () => {
         password: approvalType === 'password' ? password : null,
       });
       alert('Approval type updated successfully!');
+      window.location.href = `/community/${id}`
     } catch (error) {
       console.error('Error updating approval type:', error);
       alert('Failed to update approval type.');
@@ -65,6 +66,7 @@ const CommunitySettings = () => {
       await axios.put(`/api/communities/${id}/removeMember`, { memberEmail });
       setMembers(members.filter(member => member !== memberEmail));
       alert('Member removed successfully!');
+      window.location.href = `/community/${id}`
     } catch (error) {
       console.error('Error removing member:', error);
       alert('Failed to remove member.');
