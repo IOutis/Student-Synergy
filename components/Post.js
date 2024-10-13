@@ -88,6 +88,14 @@ function CustomEditor({ private: isPrivate, id }) {
         newFiles[index] = e.target.files[0];
         setFiles(newFiles);
     };
+    const deselectFile = (index, e) => {
+        const newFiles = [...files];
+        newFiles[index] = null; // Remove the specific file
+        setFiles(newFiles);
+    
+        // Reset the file input field itself
+        e.target.previousSibling.value = '';
+    };
 
     const addFileInput = () => {
         setFiles([...files, null]);
@@ -160,6 +168,15 @@ function CustomEditor({ private: isPrivate, id }) {
                                     onChange={(e) => handleFileChange(index, e)} 
                                     style={{ display: 'block', marginBottom: '5px' }} 
                                 />
+                                {file && (
+                             <button 
+                             type="button" 
+                             onClick={(e) => deselectFile(index, e)} 
+                             className="text-red-500 underline"
+                         >
+                             Deselect File
+                         </button>
+                        )}
                             </div>
                         ))}
 

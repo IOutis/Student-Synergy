@@ -11,6 +11,18 @@ const CommunitySchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Section'  // Referencing posts from PostData model
     }],
+    quizzes: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Quiz'
+    }],
+    assignments: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Assignment'
+    }],
+    polls: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Poll'
+    }],
     password: {type:String, default : null},
 }, { collection: 'Communities' });
 
