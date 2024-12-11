@@ -1,3 +1,4 @@
+// pages\api\quiz\create.js
 import Quiz from '../../../models/QuizSchema';
 import Question from '../../../models/QuestionSchema';
 import Community from '../../../models/CommunityModel';

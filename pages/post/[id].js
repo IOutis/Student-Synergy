@@ -89,7 +89,7 @@ const Post = () => {
     };
 
     if (!session) {
-        return <p className="text-center">Please <a href="/login" className="text-blue-500">login</a> to view this post.</p>;
+        return <p className="text-center">Please login to view this post.</p>;
     }
 
     if (!post) {

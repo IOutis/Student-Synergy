@@ -225,6 +225,24 @@ const [quizzes,setQuizzes] = useState([])
         }
     }
 };
+// Add this delete handler function inside the Community component
+const handleDeleteQuiz = async (quizId) => {
+  const confirmDelete = window.confirm("Are you sure you want to delete this quiz? This will delete all associated questions, answers, and results.");
+  
+  if (confirmDelete) {
+    try {
+      const response = await axios.delete(`/api/quiz/delete?id=${quizId}`);
+      if (response.status === 200) {
+        alert('Quiz deleted successfully');
+        // Update the quizzes state to remove the deleted quiz
+        setQuizzes(quizzes.filter(quiz => quiz._id !== quizId));
+      }
+    } catch (error) {
+      console.error('Error deleting quiz:', error);
+      alert('Failed to delete quiz. Please try again.');
+    }
+  }
+};
 const handleDeleteSection = async (id)=>{
   
   const confirmDelete = window.confirm("Are you sure you want to delete this section?");
@@ -468,6 +486,15 @@ const handleDeleteSection = async (id)=>{
                           <Link className="font-medium text-gray-700 mt-2" href={`/community/quiz/${quiz._id}`}>
                             <button>Click Here to attempt</button>
                           </Link>
+
+                          {adminaccess && (
+                            <button
+                              onClick={() => handleDeleteQuiz(quiz._id)}
+                              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition"
+                            >
+                              Delete Quiz
+                            </button>
+                          )}
 
                         </div>
                       ))}
