@@ -1,411 +1,232 @@
 "use client";
-import React, { Fragment, useState, useEffect } from "react";
-import { Disclosure, Menu, Transition,MenuButton,MenuItems,MenuItem,DisclosureButton,DisclosurePanel } from "@headlessui/react";
+import React, { Fragment } from "react";
+import { Disclosure, Menu, Transition, DisclosurePanel, DisclosureButton,MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
-const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "About", href: "/about", current: false },
-];
+// Organized navigation configuration
+const NAVIGATION_CONFIG = {
+  main: [
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+  ],
+  dashboard: [
+    { name: "Task Schedule", href: "/Tracker", description: "Manage your daily tasks" },
+    { name: "Pomodoro", href: "/services/pomodoro", description: "Focus timer" },
+    { name: "Notes", href: "/services/notes", description: "Take and organize notes" },
+  ],
+  community: [
+    { name: "All Posts", href: "/AllPosts", description: "View community posts" },
+    { name: "Create Post", href: "/Community", description: "Share with others" },
+    { name: "Leaderboard", href: "/LeaderBoard", description: "Top performers" },
+    { name: "My Posts", href: "/MyPosts", description: "Your contributions" },
+  ],
+  profile: [
+    { name: "My Profile", href: "/User_Profile", description: "View and edit profile" },
+  ]
+};
 
-const services = [
-  { name: "Pomodoro", href: "/services/pomodoro", current: false },
-  { name: "Task Schedule", href: "/Tracker", current: false },
-  { name: "Notes", href: "/services/notes", current: false },
-];
+const MenuTransition = ({ children }) => (
+  <Transition
+    as={Fragment}
+    enter="transition ease-out duration-200"
+    enterFrom="transform opacity-0 scale-95"
+    enterTo="transform opacity-100 scale-100"
+    leave="transition ease-in duration-150"
+    leaveFrom="transform opacity-100 scale-100"
+    leaveTo="transform opacity-0 scale-95"
+  >
+    {children}
+  </Transition>
+);
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+const DropdownMenu = ({ items, title }) => (
+  <Menu as="div" className="relative">
+    <MenuButton className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+      {title}
+    </MenuButton>
+    <MenuTransition>
+      <MenuItems className="absolute z-10 mt-2 w-56 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        {items.map((item) => (
+          <MenuItem key={item.name}>
+            {({ active }) => (
+              <Link
+                href={item.href}
+                className={`${
+                  active ? "bg-gray-100" : ""
+                } block px-4 py-2 text-sm`}
+              >
+                <div className="text-gray-700 font-medium">{item.name}</div>
+                {item.description && (
+                  <div className="text-gray-500 text-xs mt-0.5">{item.description}</div>
+                )}
+              </Link>
+            )}
+          </MenuItem>
+        ))}
+      </MenuItems>
+    </MenuTransition>
+  </Menu>
+);
 
 export default function NavComp() {
   const { data: session } = useSession();
-  const [notifications, setNotifications] = useState([]);
 
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-50 shadow-lg">
       {({ open }) => (
         <>
-          <div className=" px-2 sm:px-6 lg:px-8">
+          <div className="mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-              <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                <span className="sr-only">Open main menu</span>
-                {open ? (
-                  <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                ) : (
-                  <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                )}
-              </DisclosureButton>
-
+              {/* Mobile menu button */}
+              <div className="flex sm:hidden">
+                <DisclosureButton className="text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
+                  <span className="sr-only">Open main menu</span>
+                  {open ? (
+                    <XMarkIcon className="h-6 w-6" />
+                  ) : (
+                    <Bars3Icon className="h-6 w-6" />
+                  )}
+                </DisclosureButton>
               </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex flex-shrink-0 items-center">
-                <p className="font-bold text-white hidden md:block">Student Synergy</p>
-                </div>
-                <div className="hidden sm:ml-6 sm:block">
-                  <div className="flex space-x-4 xs:flex xs:flex-col justify-center items-center">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        aria-current={item.current ? "page" : undefined}
-                        className={classNames(
-                          item.current
-                            ? "text-white hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium flex flex-col justify-center"
-                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "rounded-md px-3 py-2 text-sm font-medium flex flex-col justify-center"
-                        )}
-                      >
-                        {item.name}
-                      </a>
-                    ))}
 
-                    <Menu as="div" className="" >
-                      <div>
-                        <MenuButton className="rounded-md hidden  sm:block text-gray-300 hover:bg-gray-700 hover:text-white  py-2 text-sm font-medium flex flex-col flex xs:flex xs:flex-col  px-3 py-2 text-sm  text-gray-300 hover:text-white">
-                          Services
-                        </MenuButton>
-                      </div>
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-100"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
-                      >
-                        <MenuItems className="absolute z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {services.map((item) => (
-                            <MenuItem key={item.name}>
-                              {({ active }) => (
-                                <a
-                                  href={item.href}
-                                  className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
-                                  )}
-                                >
-                                  {item.name}
-                                </a>
-                              )}
-                            </MenuItem>
-                          ))}
-                        </MenuItems>
-                      </Transition>
-                    </Menu>
-                    
-
-                    {session && (
-                      <Menu as="div" className="relative">
-                        <div>
-                          <MenuButton className="inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
-                            {session.user.name}
-                          </MenuButton>
-                        </div>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <MenuItems className="absolute  z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          <MenuItem>
-                            {({ active }) => (
-                              <Link
-                                href="/User_Profile"
-                                className={classNames(
-                                  active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm text-gray-700"
-                                )}
-                              >
-                                My Profile
-                              </Link>
-                            )}
-                          </MenuItem>
-                            <MenuItem>
-                              {({ active }) => (
-                                <Link
-                                  href="/MyPosts"
-                                  className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
-                                  )}
-                                >
-                                  My Posts
-                                </Link>
-                              )}
-                            </MenuItem>
-                            <MenuItem>
-                              {({ active }) => (
-                                <Link
-                                  href="/AllPosts"
-                                  className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
-                                  )}
-                                >
-                                  All Posts
-                                </Link>
-                              )}
-                            </MenuItem>
-                            <MenuItem>
-                              {({ active }) => (
-                                <Link
-                                  href="/Community"
-                                  className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
-                                  )}
-                                >
-                                  Post
-                                </Link>
-                              )}
-                            </MenuItem>
-                            <MenuItem>
-                              {({ active }) => (
-                                <Link
-                                  href="/LeaderBoard"
-                                  className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
-                                  )}
-                                >
-                                  Leaderboard
-                                </Link>
-                              )}
-                            </MenuItem>
-                          </MenuItems>
-                        </Transition>
-                      </Menu>
-                    )}
-
-                    {session && (
-                      <button onClick={() => signOut()} className="text-sm text-white">
-                        Sign out
-                      </button>
-                    )}
-
-                    {!session && (
-                      <button onClick={() => signIn("google")} className="text-white">
-                        Sign in
-                      </button>
-                    )}
-                  </div>
-                </div>
+              {/* Logo */}
+              <div className="flex-shrink-0 flex items-center">
+                <Link href="/" className="text-white font-bold text-xl">
+                  Student Synergy
+                </Link>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <Menu as="div" className="relative">
-                  <MenuButton className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                    <span className="absolute -inset-1.5" />
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon aria-hidden="true" className="h-6 w-6" />
-                  </MenuButton>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
+
+              {/* Desktop Navigation */}
+              <div className="hidden sm:flex sm:items-center sm:space-x-4">
+                {NAVIGATION_CONFIG.main.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-48">
-                      {notifications.length > 0 ? (
-                        notifications.map((notification, index) => (
-                          <MenuItem key={index}>
-                            {({ active }) => (
-                              <div
-                                className={classNames(
-                                  active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm text-gray-700"
-                                )}
-                                onClick={() => handleNotification(index)}
-                              >
-                                <span>{notification}</span>
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  x="0px"
-                                  y="0px"
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 64 64"
-                                >
-                                  <path d="M 28 11 C 26.895 11 26 11.895 26 13 L 26 14 L 13 14 C 11.896 14 11 14.896 11 16 C 11 17.104 11.896 18 13 18 L 14.160156 18 L 16.701172 48.498047 C 16.884172 50.928047 18.812 53 21.248047 53 L 42.751953 53 C 45.187953 53 47.115828 50.928047 47.298828 48.498047 L 49.839844 18 L 51 18 C 52.104 18 53 17.104 53 16 C 53 14.896 52.104 14 51 14 L 38 14 L 38 13 C 38 11.895 37.105 11 36 11 L 28 11 z M 29 15 L 35 15 L 35 17 C 35 18.105 35.895 19 37 19 L 47.785156 19 L 45.304688 48.351562 C 45.249688 49.080562 44.749953 49.999023 42.751953 50 L 21.248047 50 C 19.250047 50 18.750312 49.080562 18.695312 48.351562 L 16.214844 19 L 27 19 C 28.105 19 29 18.105 29 17 L 29 15 z M 26 55 C 26 57.762 28.238 60 31 60 L 33 60 C 35.762 60 38 57.762 38 55 L 26 55 z"></path>
-                                </svg>
-                              </div>
-                            )}
-                          </MenuItem>
-                        ))
-                      ) : (
-                        <MenuItem>
-                          <div className="block px-4 py-2 text-sm text-gray-700">
-                            No notifications
-                          </div>
-                        </MenuItem>
-                      )}
+                    {item.name}
+                  </Link>
+                ))}
+                
+                <DropdownMenu items={NAVIGATION_CONFIG.dashboard} title="Dashboard" />
+                <DropdownMenu items={NAVIGATION_CONFIG.community} title="Community" />
+                
+                {session && (
+                  <>
+                    <DropdownMenu 
+                      items={NAVIGATION_CONFIG.profile}
+                      title={session.user.name}
+                    />
+                    <button
+                      onClick={() => signOut()}
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Sign out
+                    </button>
+                  </>
+                )}
+                
+                {!session && (
+                  <button
+                    onClick={() => signIn("google")}
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Sign in
+                  </button>
+                )}
+
+                {/* Notifications */}
+                <Menu as="div" className="relative">
+                  <MenuButton className="text-gray-400 hover:text-white p-1 rounded-full">
+                    <span className="sr-only">View notifications</span>
+                    <BellIcon className="h-6 w-6" />
+                  </MenuButton>
+                  <MenuTransition>
+                    <MenuItems className="absolute right-0 z-10 mt-2 w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <MenuItem>
+                        <div className="block px-4 py-2 text-sm text-gray-700">
+                          No notifications
+                        </div>
+                      </MenuItem>
                     </MenuItems>
-                  </Transition>
+                  </MenuTransition>
                 </Menu>
               </div>
             </div>
           </div>
 
+          {/* Mobile Navigation */}
           <DisclosurePanel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2 flex-col justify-center">
-              {navigation.map((item) => (
+            <div className="space-y-1 px-2 pb-3 pt-2">
+              {NAVIGATION_CONFIG.main.map((item) => (
                 <DisclosureButton
                   key={item.name}
-                  as="a"
+                  as={Link}
                   href={item.href}
-                  className={classNames(
-                    item.current
-                      ? "text-white text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 "
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                    "block rounded-md px-3 py-2 text-base font-medium"
-                  )}
-                  aria-current={item.current ? "page" : undefined}
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
                 >
                   {item.name}
                 </DisclosureButton>
               ))}
-              <Menu as="div" className="rounded-md text-gray-300 hover:bg-gray-700 hover:text-white">
-                <div>
-                  <MenuButton className="block   text-base font-medium  text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
-                 Services
-                  </MenuButton>
-                </div>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
+              
+              <div className="px-3 py-2 text-gray-400 text-sm font-medium">Dashboard</div>
+              {NAVIGATION_CONFIG.dashboard.map((item) => (
+                <DisclosureButton
+                  key={item.name}
+                  as={Link}
+                  href={item.href}
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium pl-6"
                 >
-                  <MenuItems className="absolute w-full flex-col justify-center items-center left-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    {services.map((item) => (
-                      <MenuItem key={item.name}>
-                        {({ active }) => (
-                          <Link
-                            href={item.href}
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            {item.name}
-                          </Link>
-                        )}
-                      </MenuItem>
-                    ))}
-                  </MenuItems>
-                </Transition>
-              </Menu>
-
+                  {item.name}
+                </DisclosureButton>
+              ))}
+              
+              <div className="px-3 py-2 text-gray-400 text-sm font-medium">Community</div>
+              {NAVIGATION_CONFIG.community.map((item) => (
+                <DisclosureButton
+                  key={item.name}
+                  as={Link}
+                  href={item.href}
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium pl-6"
+                >
+                  {item.name}
+                </DisclosureButton>
+              ))}
+              
               {session && (
-                <Menu as="div" className="relative">
-                  <div>
-                    <MenuButton className="block   text-base font-medium  text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 inline-flex items-center text-sm font-medium text-gray-300 hover:text-white">
-                      {session.user.name}
-                    </MenuButton>
+                <>
+                  <div className="px-3 py-2 text-gray-400 text-sm font-medium">Profile</div>
+                  {NAVIGATION_CONFIG.profile.map((item) => (
+                    <DisclosureButton
+                      key={item.name}
+                      as={Link}
+                      href={item.href}
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium pl-6"
+                    >
+                      {item.name}
+                    </DisclosureButton>
+                  ))}
+                  <div className="px-3 py-2">
+                    <button
+                      onClick={() => signOut()}
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium w-full text-left"
+                    >
+                      Sign out
+                    </button>
                   </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <MenuItem>
-                        {({ active }) => (
-                          <Link
-                            href="/User_Profile"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            My Profile
-                          </Link>
-                        )}
-                      </MenuItem>
-                      <MenuItem>
-                        {({ active }) => (
-                          <Link
-                            href="/MyPosts"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            My Posts
-                          </Link>
-                        )}
-                      </MenuItem>
-                      <MenuItem>
-                        {({ active }) => (
-                          <Link
-                            href="/AllPosts"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            All Posts
-                          </Link>
-                        )}
-                      </MenuItem>
-                      <MenuItem>
-                        {({ active }) => (
-                          <Link
-                            href="/Community"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Post
-                          </Link>
-                        )}
-                      </MenuItem>
-                      <MenuItem>
-                        {({ active }) => (
-                          <Link
-                            href="/LeaderBoard"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            LeaderBoard
-                          </Link>
-                        )}
-                      </MenuItem>
-                    </MenuItems>
-                  </Transition>
-                </Menu>
+                </>
               )}
-              {session && (
-                <button onClick={() => signOut()} className="ml-4 text-white">
-                  Sign out
-                </button>
-              )}
+              
               {!session && (
-                <div className="text-white text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 ">
-                <button onClick={() => signIn("google")} className="">
-                  Sign in
-                </button>
+                <div className="px-3 py-2">
+                  <button
+                    onClick={() => signIn("google")}
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium w-full text-left"
+                  >
+                    Sign in
+                  </button>
                 </div>
               )}
             </div>
