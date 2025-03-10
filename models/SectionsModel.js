@@ -6,6 +6,7 @@ const SectionSchema = new mongoose.Schema({
       ref: 'PostData', // Reference to your existing Post model
     }],
     qaSection: { type: Boolean, default: false },
+    taskSection:{type:Boolean,default:false},
   });
 
   const Section = mongoose.models.Section || mongoose.model('Section', SectionSchema);

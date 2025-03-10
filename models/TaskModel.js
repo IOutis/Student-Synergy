@@ -6,7 +6,9 @@ const NewTaskSchema = new mongoose.Schema({
   description: String,
   dueDate: Date,
   completed: { type: Boolean, default: false },
-  priority: { type: Number, default: 1 }, // Optional field
+  priority: { type: Number, default: 1 }, 
+  community_id: {type: mongoose.Schema.Types.ObjectId, default:null},
+  users_completed: [{type: String, default:null }],
 }, { collection: 'userNewTasks' });
 
 export default mongoose.models.NewTask || mongoose.model('NewTask', NewTaskSchema);

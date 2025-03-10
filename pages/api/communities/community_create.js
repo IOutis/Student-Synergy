@@ -1,6 +1,6 @@
-import dbConnect from '../../lib/dbconnect'; // Adjust path as needed
-import Community from '../../models/CommunityModel'; // Adjust path as needed
-import User from '../../models/User';
+import dbConnect from '../../../lib/dbconnect'; // Adjust path as needed
+import Community from '../../../models/CommunityModel'; // Adjust path as needed
+import User from '../../../models/User';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {

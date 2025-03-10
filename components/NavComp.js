@@ -15,6 +15,7 @@ const NAVIGATION_CONFIG = {
     { name: "Task Schedule", href: "/Tracker", description: "Manage your daily tasks" },
     { name: "Pomodoro", href: "/services/pomodoro", description: "Focus timer" },
     { name: "Notes", href: "/services/notes", description: "Take and organize notes" },
+    { name: "Course", href: "/services/course", description: "Learn a course of your choice" },
   ],
   community: [
     { name: "All Posts", href: "/AllPosts", description: "View community posts" },

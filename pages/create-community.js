@@ -30,7 +30,7 @@ const CreateCommunity = () => {
 
     try {
       const email = session.user.email;
-      const response = await axios.post('/api/communities', {
+      const response = await axios.post('/api/communities/community_create', {
         name,
         description,
         approvalType,
