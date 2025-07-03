@@ -1,44 +1,75 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Student Synergy
 
-## Getting Started
+**Student Synergy** is a gamified productivity and collaboration platform for students. It helps users stay consistent with self-learning tasks, track progress, take timed quizzes, and earn rewards — all within a clean and intuitive interface.
 
-First, run the development server:
+> 🔧 Built with: Next.js • TypeScript • Tailwind CSS • MongoDB • NextAuth.js 
+
+---
+
+## 🚀 Features
+
+- ✅ **Authentication & Authorization** – Secure login with session handling via NextAuth.js
+- 🗓️ **Gamified Task System** – Add tasks, mark them as complete, and earn reward points
+- ⏳ **Quiz Module** *(in progress)* – Time-bound quizzes with question creation and scoring logic
+- 📈 **Dashboard** – Displays task progress, XP, and consistency metrics
+- 🔔 **Notifications** *(planned)* – Task and quiz reminders using cron jobs or external workers
+
+---
+
+## 🧠 Concept
+
+The goal is to make productivity *engaging* for students — combining self-assigned tasks, a reward system, and quiz-based reinforcement to boost accountability and learning consistency.
+
+---
+
+## 🧪 Tech Stack
+
+| Layer        | Tech Used                                 |
+|--------------|-------------------------------------------|
+| Frontend     | Next.js, TypeScript, Tailwind CSS         |
+| Backend API  | Next.js API routes                        |
+| Database     | MongoDB with Mongoose                     |
+| Auth         | NextAuth.js                               |
+| Deployment   | Vercel (for frontend/backend)             |
+
+---
+
+## 📦 Getting Started
 
 ```bash
+# Clone the repository
+git clone https://github.com/IOutis/Learners-Edge.git
+cd Learners-Edge
+
+# Install dependencies
+npm install
+
+# Add environment variables
+cp .env.example .env.local
+# Fill in MongoDB URI, Auth secrets, etc.
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+## 📌 To-Do / Roadmap
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🎨 **Redesign the frontend and landing page**
+  - Improve overall UI/UX
+  - Add clear navigation, onboarding, and visual branding
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- 🧪 **Quiz Module**
+  - Create and edit quizzes
+  - Add timer functionality for timed quizzes
+  - Implement scoring system and quiz analytics
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- 🏆 **Reward System**
+  - Introduce XP, level progression, and task streak tracking
+  - Provide visual feedback for user motivation and consistency
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- 📲 **Push Notifications**
+  - Integrate OneSignal or equivalent
+  - Use Cron jobs or background tasks to trigger reminders
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- 📤 **Email Summaries**
+  - Weekly reports of completed tasks, streaks, and upcoming goals
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-"# Student-Synergy" 
-"# Student-Synergy" 
-"# Student-Synergy" 
-"# Student-Synergy" 
