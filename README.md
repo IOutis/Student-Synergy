@@ -38,7 +38,7 @@ The goal is to make productivity *engaging* for students — combining self-assi
 
 ```bash
 # Clone the repository
-git clone https://github.com/IOutis/Learners-Edge.git
+git clone https://github.com/IOutis/Student-Synergy.git
 cd Learners-Edge
 
 # Install dependencies
