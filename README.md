@@ -4,6 +4,7 @@
 
 > 🔧 Built with: Next.js • TypeScript • Tailwind CSS • MongoDB • NextAuth.js 
 
+Website Link : [https://student-synergy.vercel.app/](https://student-synergy.vercel.app/)
 ---
 
 ## 🚀 Features
